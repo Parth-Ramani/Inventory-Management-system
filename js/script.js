@@ -2,7 +2,7 @@ if (document.referrer === "") {
   window.location.href = "index.html";
 }
 
-let purchaseData = [
+export let purchaseData = [
   {
     id: 1,
     productName: "Smartphone X",
@@ -38,7 +38,8 @@ let purchaseData = [
   }
 ];
 
-let currentProductId = null;
+console.log(purchaseData, "ff");
+export let currentProductId = null;
 
 const modal = document.getElementById("productModal");
 const openModalBtn = document.getElementById("openModal");
@@ -61,26 +62,30 @@ window.addEventListener("click", (e) => {
 
 function tableRender() {
   const tableBody = document.querySelector("#purchaseTable tbody");
-  tableBody.innerHTML = "";
-
-  purchaseData.forEach((product) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-          <td>         ${product.productName}</td>
-          <td>  ${product.stockQuantity}</td>
-          <td> $${product.costPrice.toFixed(2)}</td>
-          <td> $${product.sellingPrice.toFixed(2)}</td>
-          <td> ${product.date}</td>
-          <td> ${product.supplier}</td>
-          <td> ${product.category}</td>
-          <td> ${product.quantity}</td>
-          <td>
-              <button onclick="editProduct(${product.id})">Edit</button>
-              <button onclick="deleteProduct(${product.id})">Delete</button>
-          </td>
-`;
-    tableBody.appendChild(row);
-  });
+  if (tableBody) {
+    tableBody.innerHTML = "";
+    tableBody.innerHTML = "";
+    purchaseData.forEach((product) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+            <td>         ${product.productName}</td>
+            <td>  ${product.stockQuantity}</td>
+            <td> $${product.costPrice.toFixed(2)}</td>
+            <td> $${product.sellingPrice.toFixed(2)}</td>
+            <td> ${product.date}</td>
+            <td> ${product.supplier}</td>
+            <td> ${product.category}</td>
+            <td> ${product.quantity}</td>
+            <td>
+                <button onclick="editProduct(${product.id})">Edit</button>
+                <button onclick="deleteProduct(${product.id})">Delete</button>
+            </td>
+  `;
+      tableBody.appendChild(row);
+    });
+  } else {
+    return;
+  }
 }
 tableRender();
 // add product
@@ -137,3 +142,7 @@ function deleteProduct(id) {
   purchaseData = purchaseData.filter((d) => d.id !== id);
   tableRender();
 }
+
+console.log(purchaseData, "ff");
+
+export default { purchaseData };
