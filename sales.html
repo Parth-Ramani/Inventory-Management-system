@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Dashboard - Awesome Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.10.4/recharts.min.js"></script>
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        /* Button Styles */
+        .toggle-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .toggle-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">INVENTORY STORE</div>
+        <nav>
+            <ul>
+                <li> <a href="index.html">Home</a></li>
+                <li> <a href="dashboard.html">Purchase Dashboard</a></li>
+                <li> <a href="sales.html" class="active">Sales Dashboard</a></li>
+
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="dashboard" class="dashboard-section">
+            <h1>Sales Management Dashboard</h1>
+
+            <button id="openModal" class="toggle-btn">Add Bill</button>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Sales Transactions</h2>
+                </div>
+                <div class="card-content">
+                    <table id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <!-- Add Bill modal -->
+        <div id="billModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add to Bill</h2>
+                    <span class="close" id="closeModal">&times;</span>
+                </div>
+                <div class="modal-body"></div>
+                <form id="addProductForm">
+                    <input type="hidden" id="productId">
+                    <input type="text" id="customerName" placeholder="Customer Name" required>
+                    <input type="date" id="date" required>
+                    <!-- <input type="text" id="productName" placeholder="Product Name" required> -->
+                    <select id="productCategory" name="productCategory">
+                        <option value="">Select a category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="books">Books</option>
+                        <option value="food">Food</option>
+                    </select>
+                    <input type="number" id="quantity" placeholder="Quantity" required>
+                    <input type="number" id="sellingPrice" placeholder="Selling Price" required>
+
+
+
+
+                    <button type="submit">Add Product</button>
+                    <button type="submit">Add All</button>
+                </form>
+                <h4>All Products</h4>
+                <table id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>product</th>
+                            <th>Quantity</th>
+                            <th>price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>butterMilk</td>
+                            <td>2</td>
+                            <td>10</td>
+                            <td>20</td>
+
+                        </tr>
+                        <tr>
+                            <td>butterMilk</td>
+                            <td>2</td>
+                            <td>10</td>
+                            <td>20</td>
+
+                        </tr>
+                        <tr>
+                            <td>butterMilk</td>
+                            <td>2</td>
+                            <td>10</td>
+                            <td>20</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+        </div>
+        </div>
+    </main>
+    <script src="js/sales.js"></script>
+</body>
+
+</html>
