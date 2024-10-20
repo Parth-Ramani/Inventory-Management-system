@@ -180,6 +180,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
 
     productSelect.value = "";
     priceInput.value = "";
+    document.getElementById("quantity").value = "";
     console.log(selectedProducts);
     formTable();
     console.log(purchaseData);
@@ -189,18 +190,25 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     alert("Please select a product and its price.");
   }
 });
-console.log(selectedProducts);
+console.log(selectedProducts, "vv");
 /// Add Customer Bill
 
 document.getElementById("addProductForm").addEventListener("submit", (e) => {
+  e.preventDefault();
   const newCustomer = {
     id: Date.now(),
     customerName: document.getElementById("customerName").value,
     date: document.getElementById("date").value,
-    products: [],
+    products: selectedProducts,
     sellingPrice: document.getElementById("sellingPrice").value,
     grandTotal: 50
   };
+  customerData.unshift(newCustomer);
+  document.getElementById("customerName").value = "";
+  document.getElementById("date").value = "";
+  modal.style.display = "none";
+
+  tableRender();
 });
 
 function formTable() {
@@ -216,6 +224,9 @@ function formTable() {
  
         
         `;
+    row.addEventListener("click", () => {
+      console.log(product);
+    });
     tableBody.appendChild(row);
   });
 }
