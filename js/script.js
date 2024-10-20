@@ -94,14 +94,14 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
 
   const product = {
     id: currentProductId || Date.now(),
-    productName: document.getElementById("productName").value,
-    stockQuantity: Number(document.getElementById("stockQuantity").value),
-    costPrice: Number(document.getElementById("costPrice").value),
-    sellingPrice: Number(document.getElementById("sellingPrice").value),
-    date: document.getElementById("date").value,
-    supplier: document.getElementById("supplier").value,
-    category: document.getElementById("category").value,
-    quantity: Number(document.getElementById("quantity").value)
+    productName: document.getElementById("productName")?.value,
+    stockQuantity: Number(document.getElementById("stockQuantity")?.value),
+    costPrice: Number(document.getElementById("costPrice")?.value),
+    sellingPrice: Number(document.getElementById("sellingPrice")?.value),
+    date: document.getElementById("date")?.value,
+    supplier: document.getElementById("supplier")?.value,
+    category: document.getElementById("category")?.value,
+    quantity: Number(document.getElementById("quantity")?.value)
   };
 
   if (currentProductId) {

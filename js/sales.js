@@ -51,10 +51,13 @@ let customerData = [
   }
 ];
 let currentCustomerId;
+let selectedProducts = [];
+
 // console.log(purchaseData);
 const modal = document.getElementById("billModal");
 const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
+const priceInput = document.getElementById("sellingPrice");
 
 openModalBtn.addEventListener("click", () => {
   modal.style.display = "flex";
@@ -105,6 +108,72 @@ function tableRender() {
 
 tableRender();
 
+// document.getElementById("innerForm").addEventListener("submit",()=>{
+//   const allProducts={
+//     id: Date.now(),
+//     product:
+//   }
+// })
+
+const productSelect = document.getElementById("productSelect");
+
+function populateDropdown(purchaseData) {
+  purchaseData.forEach((productObj) => {
+    // Create a new option element
+    const option = document.createElement("option");
+    option.value = productObj.productName;
+    option.textContent = productObj.productName;
+
+    productSelect.appendChild(option);
+  });
+}
+
+// Call the function to populate the dropdown with product names
+populateDropdown(purchaseData);
+
+// Event listener to update selling price when a product is selected
+productSelect.addEventListener("change", (event) => {
+  const selectedProductName = event.target.value;
+  // Find the product object based on the selected product name
+  const selectedProduct = purchaseData.find(
+    (product) => product.productName === selectedProductName
+  );
+  if (selectedProduct) {
+    priceInput.value = selectedProduct.sellingPrice;
+  }
+});
+
+// Event listener for the "Add Product" button
+document.getElementById("innerForm")?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const selectedProductName = productSelect.value;
+  const selectedPrice = priceInput.value;
+
+  if (selectedProductName && selectedPrice) {
+    // Find the selected product object
+    const selectedProduct = purchaseData.find(
+      (product) => product.productName === selectedProductName
+    );
+
+    // Add the selected product to the array
+    selectedProducts.push({
+      product: selectedProductName,
+      sellingPrice: selectedPrice,
+      id: selectedProduct.id
+    });
+
+    // Clear the product dropdown and price input for the next selection
+    productSelect.value = "";
+    priceInput.value = "";
+    selectedProductName = "";
+    selectedPrice = "";
+    // Update the list of selected products
+    updateProductList();
+  } else {
+    alert("Please select a product and its price.");
+  }
+});
+console.log(selectedProducts);
 /// Add Customer Bill
 
 document.getElementById("addProductForm").addEventListener("submit", (e) => {
