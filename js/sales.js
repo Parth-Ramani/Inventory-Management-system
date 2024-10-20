@@ -117,24 +117,40 @@ tableRender();
 
 const productSelect = document.getElementById("productSelect");
 
+// function populateDropdown(purchaseData) {
+//   purchaseData.forEach((productObj) => {
+//     // Create a new option element
+//     const option = document.createElement("option");
+//     option.value = productObj.productName;
+//     option.textContent = productObj.productName;
+
+//     productSelect.appendChild(option);
+//   });
+// }
+
+// populateDropdown(purchaseData);
+
 function populateDropdown(purchaseData) {
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select a category";
+  defaultOption.selected = true;
+  defaultOption.disabled = true;
+  productSelect.appendChild(defaultOption);
+
   purchaseData.forEach((productObj) => {
-    // Create a new option element
     const option = document.createElement("option");
     option.value = productObj.productName;
     option.textContent = productObj.productName;
-
     productSelect.appendChild(option);
   });
 }
 
-// Call the function to populate the dropdown with product names
+// Assuming you already have purchaseData
 populateDropdown(purchaseData);
 
-// Event listener to update selling price when a product is selected
 productSelect.addEventListener("change", (event) => {
   const selectedProductName = event.target.value;
-  // Find the product object based on the selected product name
   const selectedProduct = purchaseData.find(
     (product) => product.productName === selectedProductName
   );
@@ -143,32 +159,32 @@ productSelect.addEventListener("change", (event) => {
   }
 });
 
-// Event listener for the "Add Product" button
 document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   e.preventDefault();
+
   const selectedProductName = productSelect.value;
   const selectedPrice = priceInput.value;
 
   if (selectedProductName && selectedPrice) {
-    // Find the selected product object
     const selectedProduct = purchaseData.find(
       (product) => product.productName === selectedProductName
     );
 
-    // Add the selected product to the array
     selectedProducts.push({
       product: selectedProductName,
       sellingPrice: selectedPrice,
-      id: selectedProduct.id
+      quantity: document.getElementById("quantity").value,
+      id: selectedProduct.id,
+      total: selectedPrice * document.getElementById("quantity").value
     });
 
-    // Clear the product dropdown and price input for the next selection
     productSelect.value = "";
     priceInput.value = "";
-    selectedProductName = "";
-    selectedPrice = "";
-    // Update the list of selected products
-    updateProductList();
+    console.log(selectedProducts);
+    formTable();
+    console.log(purchaseData);
+
+    // updateProductList();
   } else {
     alert("Please select a product and its price.");
   }
@@ -186,3 +202,23 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
     grandTotal: 50
   };
 });
+
+function formTable() {
+  const tableBody = document.querySelector("#productsTable tbody");
+  tableBody.innerHTML = "";
+  selectedProducts.forEach((product) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${product.product}</td>
+<td>${product.quantity}</td>
+<td>${product.sellingPrice}</td>
+<td>${product.total}</td>
+ 
+        
+        `;
+    tableBody.appendChild(row);
+  });
+}
+
+formTable();
+console.log(purchaseData);
