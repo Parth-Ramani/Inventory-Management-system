@@ -93,6 +93,8 @@ function tableRender() {
   customerData.forEach((product) => {
     const row = document.createElement("tr");
     row.innerHTML = `
+       
+
         <td>${product.customerName}</td>
 <td>${product.date}</td>
 <td>${product.grandTotal}</td>
@@ -102,6 +104,22 @@ function tableRender() {
           </td>
         
         `;
+    // row.addEventListener("click", () => console.log(product));
+    row.addEventListener("click", () => {
+      // Encode the product information as URL parameters
+      // const params = {
+      //   product: product.productName,
+      //   quantity: product.quantity,
+      //   sellingPrice: product.sellingPrice,
+      //   total: product.total
+      // };
+
+      // Construct the URL for invoice.html with parameters
+      const invoiceUrl = `invoiceTemplate.html?${""}`;
+      console.log(invoiceUrl);
+      // Open invoice.html in a new tab
+      window.open(invoiceUrl);
+    });
     tableBody.appendChild(row);
   });
 }
@@ -224,9 +242,10 @@ function formTable() {
  
         
         `;
-    row.addEventListener("click", () => {
-      console.log(product);
-    });
+    // row.addEventListener("click", () => {
+    //   console.log(product);
+    // });
+
     tableBody.appendChild(row);
   });
 }
