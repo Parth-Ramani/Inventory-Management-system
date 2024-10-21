@@ -78,6 +78,17 @@
     <main>
         <section id="dashboard" class="dashboard-section">
             <h1>Purchase Management Dashboard</h1>
+            <div class="container">
+                <div>
+                    <h1>Total Purchase Value</h1>
+                    <div id="totalValue">$0.00</div>
+                </div>
+                <div>
+                    <h1>Total Item purchased</h1>
+                    <div id="totalPurchase">0.00</div>
+                </div>
+
+            </div>
 
             <button id="openModal" class="toggle-btn">Add Product</button>
             <div class="card">
@@ -85,6 +96,13 @@
                     <h2 class="card-title">Purchase Transactions</h2>
                 </div>
                 <div class="card-content">
+                    <label for="itemsPerPage">Items per page:</label>
+                    <select id="itemsPerPage">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
                     <table id="purchaseTable">
                         <thead>
                             <tr>
@@ -101,7 +119,7 @@
                         </thead>
                         <tbody></tbody>
                     </table>
-
+                    <div id="paginationControls" class="pagination-controls"></div>
                 </div>
             </div>
         </section>

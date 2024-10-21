@@ -64,51 +64,103 @@ function saveToLocalStorage() {
   localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
 }
 
-// table render
+let itemsPerPage = 5; // Default items per page
+let currentPage = 1;
 
-function tableRender() {
+// Function to render the table with pagination
+function tableRender(page = 1) {
   const tableBody = document.querySelector("#purchaseTable tbody");
   if (tableBody) {
     tableBody.innerHTML = "";
-    tableBody.innerHTML = "";
-    purchaseData.forEach((product) => {
+
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    const paginatedData = purchaseData.slice(start, end);
+
+    paginatedData.forEach((product) => {
       const costPrice = product.costPrice
         ? product.costPrice.toFixed(2)
         : "0.00";
       const sellingPrice = product.sellingPrice
         ? product.sellingPrice.toFixed(2)
         : "0.00";
+
       const row = document.createElement("tr");
       row.innerHTML = `
-            <td>  ${product.productName}</td>
-            <td>  ${product.stockQuantity}</td>
-            <td> ₹${costPrice}</td>
-            <td> ₹${costPrice}</td>
-            <td> ${product.date}</td>
-            <td> ${product.supplier}</td>
-            <td> ${product.category}</td>
-            <td> ${product.quantity}</td>
-            <td>
-                <button onclick="editProd(${product.id})">Edit</button>
-                <button onclick="deleteProduct(${product.id})">Delete</button>
-            </td>
-  `;
+        <td>${product.productName}</td>
+        <td>${product.stockQuantity}</td>
+        <td>₹${costPrice}</td>
+        <td>₹${sellingPrice}</td>
+        <td>${product.date}</td>
+        <td>${product.supplier}</td>
+        <td>${product.category}</td>
+        <td>${product.quantity}</td>
+        <td>
+            <button onclick="editProd(${product.id})">Edit</button>
+            <button onclick="deleteProduct(${product.id})">Delete</button>
+        </td>
+      `;
       tableBody.appendChild(row);
     });
-  } else {
-    return;
+
+    renderPaginationControls();
   }
 }
 
-tableRender();
+function renderPaginationControls() {
+  const paginationControls = document.getElementById("paginationControls");
+  paginationControls.innerHTML = "";
+
+  const totalItems = purchaseData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const button = document.createElement("button");
+    button.textContent = i;
+    button.classList.add("pagination-btn");
+
+    if (i === currentPage) {
+      button.classList.add("active");
+    }
+
+    button.addEventListener("click", function () {
+      currentPage = i;
+      tableRender(currentPage);
+    });
+
+    paginationControls.appendChild(button);
+  }
+}
+
+document.getElementById("itemsPerPage").addEventListener("change", function () {
+  itemsPerPage = Number(this.value);
+  currentPage = 1;
+  tableRender(currentPage);
+});
+
+// Initial render
+tableRender(currentPage);
 
 // add product
+
 document.getElementById("addProductForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
+  const productName = document.getElementById("productName")?.value;
+
+  const existingProduct = purchaseData.find(
+    (product) => product.productName === productName
+  );
+
+  if (existingProduct) {
+    alert("Product already exists in the inventory!");
+    return;
+  }
+
   const product = {
     id: currentProductId || Date.now(),
-    productName: document.getElementById("productName")?.value,
+    productName: productName,
     stockQuantity: Number(document.getElementById("stockQuantity")?.value),
     costPrice: Number(document.getElementById("costPrice")?.value),
     sellingPrice: Number(document.getElementById("sellingPrice")?.value),
@@ -119,21 +171,34 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
   };
 
   if (currentProductId) {
-    console.log(currentProductId);
-
     const index = purchaseData.findIndex((i) => i.id === currentProductId);
     purchaseData[index] = product;
   } else {
     purchaseData.unshift(product);
   }
+
   saveToLocalStorage();
   tableRender();
-  console.log(product);
-  console.log(purchaseData);
   modal.style.display = "none";
 });
+
 console.log(currentProductId);
 console.log(purchaseData);
+
+const totalPurchaseValue = purchaseData.reduce((total, item) => {
+  return total + item.costPrice * item.quantity;
+}, 0);
+document.getElementById("totalValue").textContent = `$${totalPurchaseValue}`;
+
+console.log("Total Purchase Value:", totalPurchaseValue);
+
+// total items
+const totalItems = purchaseData.reduce((total, item) => {
+  return total + item.quantity;
+}, 0);
+
+document.getElementById("totalPurchase").textContent =
+  totalItems.toLocaleString();
 
 // Edit Product
 
