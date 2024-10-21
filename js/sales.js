@@ -59,6 +59,8 @@ function saveToLocalStorage() {
 }
 
 let currentCustomerId;
+let itemsPerPage = 5; // Default items per page
+let currentPage = 1;
 let selectedProducts = [];
 
 // console.log(purchaseData);
@@ -75,33 +77,16 @@ closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
 });
 
-// table render
-// function tableRender() {
-//   const tableBody = document.querySelector("#salesTable tbody");
-//   tableBody.innerHTML = "";
-//   customerData.forEach((product) => {
-//     const row = document.createElement("tr");
-//     row.innerHTML = `<td>${product.customerName}</td>
-// <td>${product.date}</td>
-// <td>${product.grandTotal}</td>
-//  <td>
-//               <button onclick="editProduct(${product.id})">Edit</button>
-//               <button onclick="deleteProduct(${product.id})">Delete</button>
-//           </td>
-// `;
-//     tableBody.appendChild(row);
-//   });
-// }
-
-// tableRender();
-
 function tableRender() {
   const tableBody = document.querySelector("#salesTable tbody");
   tableBody.innerHTML = "";
-  customerData.forEach((product) => {
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+
+  const paginatedData = purchaseData.slice(start, end);
+  paginatedData.forEach((product) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-       
 
         <td>${product.customerName}</td>
 <td>${product.date}</td>
@@ -110,36 +95,55 @@ function tableRender() {
                <button onclick="editProduct(${product.id})">Edit</button>
                <button onclick="deleteProduct(${product.id})">Delete</button>
           </td>
-        
-        `;
-    // row.addEventListener("click", () => console.log(product));
-    row.addEventListener("click", () => {
-      // Encode the product information as URL parameters
-      // const params = {
-      //   product: product.productName,
-      //   quantity: product.quantity,
-      //   sellingPrice: product.sellingPrice,
-      //   total: product.total
-      // };
 
-      // Construct the URL for invoice.html with parameters
-      const invoiceUrl = `invoiceTemplate.html`;
-      console.log(invoiceUrl);
-      // Open invoice.html in a new tab
-      window.open(invoiceUrl);
-    });
+        `;
+
+    // row.addEventListener("click", () => {
+    //   const invoiceUrl = `invoiceTemplate.html`;
+    //   console.log(invoiceUrl);
+    //   // Open invoice.html in a new tab
+    //   window.open(invoiceUrl);
+    // });
     tableBody.appendChild(row);
   });
+  renderPaginationControls();
 }
 
-tableRender();
+function renderPaginationControls() {
+  const paginationControls = document.getElementById("paginationControls");
+  paginationControls.innerHTML = "";
 
-// document.getElementById("innerForm").addEventListener("submit",()=>{
-//   const allProducts={
-//     id: Date.now(),
-//     product:
-//   }
-// })
+  const totalItems = purchaseData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const button = document.createElement("button");
+    button.textContent = i;
+    button.classList.add("pagination-btn");
+
+    if (i === currentPage) {
+      button.classList.add("active");
+    }
+
+    button.addEventListener("click", function () {
+      currentPage = i;
+      tableRender(currentPage);
+    });
+
+    paginationControls.appendChild(button);
+  }
+}
+
+document
+  .getElementById("itemsPerPage")
+  ?.addEventListener("change", function () {
+    itemsPerPage = Number(this.value);
+    currentPage = 1;
+    tableRender(currentPage);
+  });
+
+// Initial render
+tableRender(currentPage);
 
 const productSelect = document.getElementById("productSelect");
 
@@ -252,8 +256,7 @@ function formTable() {
 <td>${product.quantity}</td>
 <td>${product.sellingPrice}</td>
 <td>${product.total}</td>
- 
-        
+
         `;
     // row.addEventListener("click", () => {
     //   console.log(product);
@@ -265,3 +268,5 @@ function formTable() {
 
 formTable();
 console.log(purchaseData);
+
+console.log("jjjj");

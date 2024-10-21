@@ -191,6 +191,16 @@ form input {
     border-radius: 4px;
 
 }
+form select{
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%; /* Make it responsive */
+    font-size: 16px; /* Optional: set the font size */
+    box-sizing: border-box; 
+    margin-top: 10px;
+}
 
 form button {
     background-color: #6e8efb;
