@@ -1,5 +1,5 @@
-import { purchaseProductData } from "./script.js";
-console.log(purchaseProductData);
+import { purchaseData } from "./script.js";
+console.log(purchaseData);
 let customerData = [
   {
     id: 1,
@@ -53,7 +53,7 @@ let customerData = [
 let currentCustomerId;
 let selectedProducts = [];
 
-// console.log(purchaseProductData);
+// console.log(purchaseData);
 const modal = document.getElementById("billModal");
 const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
@@ -135,8 +135,8 @@ tableRender();
 
 const productSelect = document.getElementById("productSelect");
 
-// function populateDropdown(purchaseProductData) {
-//   purchaseProductData.forEach((productObj) => {
+// function populateDropdown(purchaseData) {
+//   purchaseData.forEach((productObj) => {
 //     // Create a new option element
 //     const option = document.createElement("option");
 //     option.value = productObj.productName;
@@ -146,9 +146,9 @@ const productSelect = document.getElementById("productSelect");
 //   });
 // }
 
-// populateDropdown(purchaseProductData);
+// populateDropdown(purchaseData);
 
-function populateDropdown(purchaseProductData) {
+function populateDropdown(purchaseData) {
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "Select a category";
@@ -156,7 +156,7 @@ function populateDropdown(purchaseProductData) {
   defaultOption.disabled = true;
   productSelect.appendChild(defaultOption);
 
-  purchaseProductData.forEach((productObj) => {
+  purchaseData.forEach((productObj) => {
     const option = document.createElement("option");
     option.value = productObj.productName;
     option.textContent = productObj.productName;
@@ -164,12 +164,12 @@ function populateDropdown(purchaseProductData) {
   });
 }
 
-// Assuming you already have purchaseProductData
-populateDropdown(purchaseProductData);
+// Assuming you already have purchaseData
+populateDropdown(purchaseData);
 
 productSelect.addEventListener("change", (event) => {
   const selectedProductName = event.target.value;
-  const selectedProduct = purchaseProductData.find(
+  const selectedProduct = purchaseData.find(
     (product) => product.productName === selectedProductName
   );
   if (selectedProduct) {
@@ -184,7 +184,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   const selectedPrice = priceInput.value;
 
   if (selectedProductName && selectedPrice) {
-    const selectedProduct = purchaseProductData.find(
+    const selectedProduct = purchaseData.find(
       (product) => product.productName === selectedProductName
     );
 
@@ -201,7 +201,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     document.getElementById("quantity").value = "";
     console.log(selectedProducts);
     formTable();
-    console.log(purchaseProductData);
+    console.log(purchaseData);
 
     // updateProductList();
   } else {
@@ -251,4 +251,4 @@ function formTable() {
 }
 
 formTable();
-console.log(purchaseProductData);
+console.log(purchaseData);

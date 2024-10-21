@@ -2,7 +2,7 @@ if (document.referrer === "") {
   window.location.href = "index.html";
 }
 
-export let purchaseData = [
+export let initialPurchaseData = [
   {
     id: 1,
     productName: "Smartphone X",
@@ -57,6 +57,13 @@ window.addEventListener("click", (e) => {
   }
 });
 
+export let purchaseData =
+  JSON.parse(localStorage.getItem("purchaseData")) || initialPurchaseData;
+
+function saveToLocalStorage() {
+  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+}
+
 // table render
 
 function tableRender() {
@@ -76,7 +83,7 @@ function tableRender() {
             <td> ${product.category}</td>
             <td> ${product.quantity}</td>
             <td>
-                <button onclick="editProduct(${product.id})">Edit</button>
+                <button onclick="editProd(${product.id})">Edit</button>
                 <button onclick="deleteProduct(${product.id})">Delete</button>
             </td>
   `;
@@ -113,28 +120,34 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
   } else {
     purchaseData.unshift(product);
   }
-
+  saveToLocalStorage();
   tableRender();
   console.log(product);
+  console.log(purchaseData);
   modal.style.display = "none";
 });
 console.log(currentProductId);
+console.log(purchaseData);
 
 // Edit Product
 
-function editProduct(id) {
-  currentProductId = id;
-  console.log(currentProductId);
-  const product = purchaseData.find((p) => p.id === id);
-  (document.getElementById("productName").value = product.productName),
-    (document.getElementById("stockQuantity").value = product.stockQuantity),
-    (document.getElementById("costPrice").value = product.costPrice),
-    (document.getElementById("sellingPrice").value = product.sellingPrice),
-    (document.getElementById("date").value = product.date),
-    (document.getElementById("supplier").value = product.supplier),
-    (document.getElementById("category").value = product.category),
-    (document.getElementById("quantity").value = product.quantity);
-  modal.style.display = "flex";
+// function editProduct(id) {
+//   currentProductId = id;
+//   console.log(currentProductId);
+//   const product = purchaseData.find((p) => p.id === id);
+//   (document.getElementById("productName").value = product.productName),
+//     // (document.getElementById("stockQuantity").value = product.stockQuantity),
+//     (document.getElementById("costPrice").value = product.costPrice),
+//     (document.getElementById("sellingPrice").value = product.sellingPrice),
+//     (document.getElementById("date").value = product.date),
+//     (document.getElementById("supplier").value = product.supplier),
+//     (document.getElementById("category").value = product.category),
+//     (document.getElementById("quantity").value = product.quantity);
+//   modal.style.display = "flex";
+// }
+
+function editProd(id) {
+  console.log(id);
 }
 
 // deleteProduct
