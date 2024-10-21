@@ -77,13 +77,14 @@ closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
 });
 
-function tableRender() {
+function tableRender(page = 1) {
   const tableBody = document.querySelector("#salesTable tbody");
   tableBody.innerHTML = "";
   const start = (page - 1) * itemsPerPage;
   const end = start + itemsPerPage;
 
-  const paginatedData = purchaseData.slice(start, end);
+  const paginatedData = customerData.slice(start, end);
+  console.log(paginatedData);
   paginatedData.forEach((product) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -91,10 +92,10 @@ function tableRender() {
         <td>${product.customerName}</td>
 <td>${product.date}</td>
 <td>${product.grandTotal}</td>
- <td>
-               <button onclick="editProduct(${product.id})">Edit</button>
-               <button onclick="deleteProduct(${product.id})">Delete</button>
-          </td>
+  <td class="action-icons">
+                    <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+                    <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+                </td>
 
         `;
 
@@ -256,7 +257,10 @@ function formTable() {
 <td>${product.quantity}</td>
 <td>${product.sellingPrice}</td>
 <td>${product.total}</td>
-
+<td class="action-icons">
+                    <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+                    <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+                </td>
         `;
     // row.addEventListener("click", () => {
     //   console.log(product);

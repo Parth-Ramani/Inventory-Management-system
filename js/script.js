@@ -39,14 +39,18 @@ export let initialPurchaseData = [
 ];
 
 export let currentProductId = null;
+let itemsPerPage = 5; // Default items per page
+let currentPage = 1;
 
 const modal = document.getElementById("productModal");
 const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
 
+// Open modal box
 openModalBtn.addEventListener("click", () => {
   modal.style.display = "flex";
 });
+// close modal box
 closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
 });
@@ -57,15 +61,13 @@ window.addEventListener("click", (e) => {
   }
 });
 
+// stored data inLocal storage
 export let purchaseData =
   JSON.parse(localStorage.getItem("purchaseData")) || initialPurchaseData;
 
 function saveToLocalStorage() {
   localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
 }
-
-let itemsPerPage = 5; // Default items per page
-let currentPage = 1;
 
 // Function to render the table with pagination
 function tableRender(page = 1) {
@@ -96,10 +98,13 @@ function tableRender(page = 1) {
         <td>${product.supplier}</td>
         <td>${product.category}</td>
         <td>${product.quantity}</td>
-        <td>
-            <button onclick="editProd(${product.id})">Edit</button>
-            <button onclick="deleteProduct(${product.id})">Delete</button>
-        </td>
+
+ <td class="action-icons">
+                    <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+                    <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+                </td>
+
+        
       `;
       tableBody.appendChild(row);
     });
@@ -133,11 +138,13 @@ function renderPaginationControls() {
   }
 }
 
-document.getElementById("itemsPerPage").addEventListener("change", function () {
-  itemsPerPage = Number(this.value);
-  currentPage = 1;
-  tableRender(currentPage);
-});
+document
+  .getElementById("itemsPerPage")
+  ?.addEventListener("change", function () {
+    itemsPerPage = Number(this.value);
+    currentPage = 1;
+    tableRender(currentPage);
+  });
 
 // Initial render
 tableRender(currentPage);
@@ -188,8 +195,12 @@ console.log(purchaseData);
 const totalPurchaseValue = purchaseData.reduce((total, item) => {
   return total + item.costPrice * item.quantity;
 }, 0);
-document.getElementById("totalValue").textContent = `₹${totalPurchaseValue}`;
 
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("totalValue").textContent = `₹${totalPurchaseValue}`;
+  document.getElementById("totalPurchase").textContent =
+    totalItems.toLocaleString();
+});
 console.log("Total Purchase Value:", totalPurchaseValue);
 
 // total items
@@ -197,12 +208,16 @@ const totalItems = purchaseData.reduce((total, item) => {
   return total + item.quantity;
 }, 0);
 
-document.getElementById("totalPurchase").textContent =
-  totalItems.toLocaleString();
+// deleteProduct
+
+window.deleteProduct = function (id) {
+  purchaseData = purchaseData.filter((d) => d.id !== id);
+  tableRender();
+};
 
 // Edit Product
 
-function editProduct(id) {
+window.editProduct = function (id) {
   currentProductId = id;
   console.log(currentProductId);
   const product = purchaseData.find((p) => p.id === id);
@@ -215,17 +230,6 @@ function editProduct(id) {
     (document.getElementById("category").value = product.category),
     (document.getElementById("quantity").value = product.quantity);
   modal.style.display = "flex";
-}
-
-function editProd(id) {
-  console.log(id);
-}
-
-// deleteProduct
-
-function deleteProduct(id) {
-  purchaseData = purchaseData.filter((d) => d.id !== id);
-  tableRender();
-}
+};
 
 export default { purchaseData };
