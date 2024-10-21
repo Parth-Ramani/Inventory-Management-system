@@ -1,6 +1,6 @@
 import { purchaseData } from "./script.js";
 console.log(purchaseData);
-let customerData = [
+let initialCustomerData = [
   {
     id: 1,
     customerName: "john",
@@ -50,6 +50,14 @@ let customerData = [
     grandTotal: 50
   }
 ];
+
+export let customerData =
+  JSON.parse(localStorage.getItem("customerData")) || initialCustomerData;
+
+function saveToLocalStorage() {
+  localStorage.setItem("customerData", JSON.stringify(customerData));
+}
+
 let currentCustomerId;
 let selectedProducts = [];
 
@@ -147,7 +155,7 @@ const productSelect = document.getElementById("productSelect");
 // }
 
 // populateDropdown(purchaseData);
-
+console.log(purchaseData);
 function populateDropdown(purchaseData) {
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
@@ -221,12 +229,17 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
     sellingPrice: document.getElementById("sellingPrice").value,
     grandTotal: 50
   };
-  customerData.unshift(newCustomer);
+
+  newCustomer.products.length === 0
+    ? alert("fill the product")
+    : customerData.unshift(newCustomer);
+  console.log(customerData);
   document.getElementById("customerName").value = "";
   document.getElementById("date").value = "";
   modal.style.display = "none";
 
   tableRender();
+  saveToLocalStorage();
 });
 
 function formTable() {

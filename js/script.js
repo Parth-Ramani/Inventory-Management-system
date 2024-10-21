@@ -72,12 +72,18 @@ function tableRender() {
     tableBody.innerHTML = "";
     tableBody.innerHTML = "";
     purchaseData.forEach((product) => {
+      const costPrice = product.costPrice
+        ? product.costPrice.toFixed(2)
+        : "0.00";
+      const sellingPrice = product.sellingPrice
+        ? product.sellingPrice.toFixed(2)
+        : "0.00";
       const row = document.createElement("tr");
       row.innerHTML = `
-            <td>         ${product.productName}</td>
+            <td>  ${product.productName}</td>
             <td>  ${product.stockQuantity}</td>
-            <td> $${product.costPrice.toFixed(2)}</td>
-            <td> $${product.sellingPrice.toFixed(2)}</td>
+            <td> ₹${costPrice}</td>
+            <td> ₹${costPrice}</td>
             <td> ${product.date}</td>
             <td> ${product.supplier}</td>
             <td> ${product.category}</td>
@@ -131,20 +137,20 @@ console.log(purchaseData);
 
 // Edit Product
 
-// function editProduct(id) {
-//   currentProductId = id;
-//   console.log(currentProductId);
-//   const product = purchaseData.find((p) => p.id === id);
-//   (document.getElementById("productName").value = product.productName),
-//     // (document.getElementById("stockQuantity").value = product.stockQuantity),
-//     (document.getElementById("costPrice").value = product.costPrice),
-//     (document.getElementById("sellingPrice").value = product.sellingPrice),
-//     (document.getElementById("date").value = product.date),
-//     (document.getElementById("supplier").value = product.supplier),
-//     (document.getElementById("category").value = product.category),
-//     (document.getElementById("quantity").value = product.quantity);
-//   modal.style.display = "flex";
-// }
+function editProduct(id) {
+  currentProductId = id;
+  console.log(currentProductId);
+  const product = purchaseData.find((p) => p.id === id);
+  (document.getElementById("productName").value = product.productName),
+    // (document.getElementById("stockQuantity").value = product.stockQuantity),
+    (document.getElementById("costPrice").value = product.costPrice),
+    (document.getElementById("sellingPrice").value = product.sellingPrice),
+    (document.getElementById("date").value = product.date),
+    (document.getElementById("supplier").value = product.supplier),
+    (document.getElementById("category").value = product.category),
+    (document.getElementById("quantity").value = product.quantity);
+  modal.style.display = "flex";
+}
 
 function editProd(id) {
   console.log(id);
