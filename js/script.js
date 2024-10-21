@@ -38,7 +38,6 @@ export let purchaseData = [
   }
 ];
 
-console.log(purchaseData, "ff");
 export let currentProductId = null;
 
 const modal = document.getElementById("productModal");
@@ -87,7 +86,9 @@ function tableRender() {
     return;
   }
 }
+
 tableRender();
+
 // add product
 document.getElementById("addProductForm").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -142,7 +143,5 @@ function deleteProduct(id) {
   purchaseData = purchaseData.filter((d) => d.id !== id);
   tableRender();
 }
-
-console.log(purchaseData, "ff");
 
 export default { purchaseData };

@@ -1,5 +1,5 @@
-import { purchaseData } from "./script.js";
-console.log(purchaseData);
+import { purchaseProductData } from "./script.js";
+console.log(purchaseProductData);
 let customerData = [
   {
     id: 1,
@@ -53,7 +53,7 @@ let customerData = [
 let currentCustomerId;
 let selectedProducts = [];
 
-// console.log(purchaseData);
+// console.log(purchaseProductData);
 const modal = document.getElementById("billModal");
 const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
@@ -115,7 +115,7 @@ function tableRender() {
       // };
 
       // Construct the URL for invoice.html with parameters
-      const invoiceUrl = `invoiceTemplate.html?${""}`;
+      const invoiceUrl = `invoiceTemplate.html`;
       console.log(invoiceUrl);
       // Open invoice.html in a new tab
       window.open(invoiceUrl);
@@ -135,8 +135,8 @@ tableRender();
 
 const productSelect = document.getElementById("productSelect");
 
-// function populateDropdown(purchaseData) {
-//   purchaseData.forEach((productObj) => {
+// function populateDropdown(purchaseProductData) {
+//   purchaseProductData.forEach((productObj) => {
 //     // Create a new option element
 //     const option = document.createElement("option");
 //     option.value = productObj.productName;
@@ -146,9 +146,9 @@ const productSelect = document.getElementById("productSelect");
 //   });
 // }
 
-// populateDropdown(purchaseData);
+// populateDropdown(purchaseProductData);
 
-function populateDropdown(purchaseData) {
+function populateDropdown(purchaseProductData) {
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "Select a category";
@@ -156,7 +156,7 @@ function populateDropdown(purchaseData) {
   defaultOption.disabled = true;
   productSelect.appendChild(defaultOption);
 
-  purchaseData.forEach((productObj) => {
+  purchaseProductData.forEach((productObj) => {
     const option = document.createElement("option");
     option.value = productObj.productName;
     option.textContent = productObj.productName;
@@ -164,12 +164,12 @@ function populateDropdown(purchaseData) {
   });
 }
 
-// Assuming you already have purchaseData
-populateDropdown(purchaseData);
+// Assuming you already have purchaseProductData
+populateDropdown(purchaseProductData);
 
 productSelect.addEventListener("change", (event) => {
   const selectedProductName = event.target.value;
-  const selectedProduct = purchaseData.find(
+  const selectedProduct = purchaseProductData.find(
     (product) => product.productName === selectedProductName
   );
   if (selectedProduct) {
@@ -184,7 +184,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   const selectedPrice = priceInput.value;
 
   if (selectedProductName && selectedPrice) {
-    const selectedProduct = purchaseData.find(
+    const selectedProduct = purchaseProductData.find(
       (product) => product.productName === selectedProductName
     );
 
@@ -201,7 +201,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     document.getElementById("quantity").value = "";
     console.log(selectedProducts);
     formTable();
-    console.log(purchaseData);
+    console.log(purchaseProductData);
 
     // updateProductList();
   } else {
@@ -251,4 +251,4 @@ function formTable() {
 }
 
 formTable();
-console.log(purchaseData);
+console.log(purchaseProductData);
