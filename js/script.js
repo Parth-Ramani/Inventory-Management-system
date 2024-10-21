@@ -188,7 +188,7 @@ console.log(purchaseData);
 const totalPurchaseValue = purchaseData.reduce((total, item) => {
   return total + item.costPrice * item.quantity;
 }, 0);
-document.getElementById("totalValue").textContent = `$${totalPurchaseValue}`;
+document.getElementById("totalValue").textContent = `₹${totalPurchaseValue}`;
 
 console.log("Total Purchase Value:", totalPurchaseValue);
 
