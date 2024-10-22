@@ -232,26 +232,31 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
 console.log(selectedProducts, "vv");
 
 /// Add Customer Bill
-document.getElementById("addProductForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const newCustomer = {
-    id: currentCustomerId || Date.now(),
-    customerName: document.getElementById("customerName").value,
-    date: document.getElementById("date").value,
-    products: selectedProducts,
-    sellingPrice: document.getElementById("sellingPrice").value,
-    grandTotal: 50
-  };
 
-  customerData.unshift(newCustomer);
-  console.log(customerData);
-  document.getElementById("customerName").value = "";
-  document.getElementById("date").value = "";
-  modal.style.display = "none";
-
-  tableRender();
-  saveToLocalStorage();
+document.getElementById("onsubmit")?.addEventListener("click", () => {
+  console.log("submited");
 });
+
+// document.getElementById("addProductForm").addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   const newCustomer = {
+//     id: currentCustomerId || Date.now(),
+//     customerName: document.getElementById("customerName").value,
+//     date: document.getElementById("date").value,
+//     products: selectedProducts,
+//     sellingPrice: document.getElementById("sellingPrice").value,
+//     grandTotal: 50
+//   };
+
+//   customerData.unshift(newCustomer);
+//   console.log(customerData);
+//   document.getElementById("customerName").value = "";
+//   document.getElementById("date").value = "";
+//   modal.style.display = "none";
+
+//   tableRender();
+//   saveToLocalStorage();
+// });
 
 // Edit in SalesTable
 
