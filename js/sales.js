@@ -1,8 +1,11 @@
+if (document.referrer === "") {
+  window.location.href = "index.html";
+}
 import { purchaseData as purchaseDataAll } from "./script.js";
 console.log(purchaseDataAll);
 const purchaseData = purchaseDataAll.map((products) => products);
 console.log(purchaseData, "map");
-let customerData = [
+let initialCustomerData = [
   {
     id: 1,
     customerName: "john",
@@ -53,12 +56,12 @@ let customerData = [
   }
 ];
 
-// export let customerData =
-//   JSON.parse(localStorage.getItem("customerData")) || initialCustomerData;
+export let customerData =
+  JSON.parse(localStorage.getItem("customerData")) || initialCustomerData;
 
-// function saveToLocalStorage() {
-//   localStorage.setItem("customerData", JSON.stringify(customerData));
-// }
+function saveToLocalStorage() {
+  localStorage.setItem("customerData", JSON.stringify(customerData));
+}
 
 let currentCustomerId;
 let itemsPerPage = 5; // Default items per page
@@ -247,7 +250,7 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
   modal.style.display = "none";
 
   tableRender();
-  // saveToLocalStorage();
+  saveToLocalStorage();
 });
 
 // Edit in SalesTable

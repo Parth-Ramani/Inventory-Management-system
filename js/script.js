@@ -91,7 +91,6 @@ function tableRender(page = 1) {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${product.productName}</td>
-        <td>${product.stockQuantity}</td>
         <td>₹${costPrice}</td>
         <td>₹${sellingPrice}</td>
         <td>${product.date}</td>
@@ -151,31 +150,80 @@ tableRender(currentPage);
 
 // add product
 
+// document.getElementById("addProductForm").addEventListener("submit", (e) => {
+//   e.preventDefault();
+
+//   const productName = document.getElementById("productName")?.value;
+
+//   // const existingProduct = purchaseData.find(
+//   //   (product) => product.productName === productName
+//   // );
+
+//   // if (existingProduct) {
+//   //   alert("Product already exists in the inventory!");
+//   //   return;
+//   // }
+
+//   const product = {
+//     id: currentProductId || Date.now(),
+//     productName: productName,
+//     costPrice: Number(document.getElementById("costPrice")?.value),
+//     sellingPrice: Number(document.getElementById("sellingPrice")?.value),
+//     date: document.getElementById("date")?.value,
+//     supplier: document.getElementById("supplier")?.value,
+//     category: document.getElementById("category")?.value,
+//     quantity: Number(document.getElementById("quantity")?.value)
+//   };
+
+//   if (currentProductId) {
+//     const index = purchaseData.findIndex((i) => i.id === currentProductId);
+//     purchaseData[index] = product;
+//   }
+
+//   else {
+//     purchaseData.unshift(product);
+//   }
+
+//   saveToLocalStorage();
+//   tableRender();
+//   modal.style.display = "none";
+
+//   document.getElementById("addProductForm").reset();
+// });
+
 document.getElementById("addProductForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const productName = document.getElementById("productName")?.value;
-
-  // const existingProduct = purchaseData.find(
-  //   (product) => product.productName === productName
-  // );
-
-  // if (existingProduct) {
-  //   alert("Product already exists in the inventory!");
-  //   return;
-  // }
-
+  // Get all values first
   const product = {
     id: currentProductId || Date.now(),
-    productName: productName,
-    stockQuantity: Number(document.getElementById("stockQuantity")?.value),
+    productName: document.getElementById("productName")?.value?.trim(),
     costPrice: Number(document.getElementById("costPrice")?.value),
     sellingPrice: Number(document.getElementById("sellingPrice")?.value),
-    date: document.getElementById("date")?.value,
-    supplier: document.getElementById("supplier")?.value,
-    category: document.getElementById("category")?.value,
+    date: document.getElementById("date")?.value?.trim(),
+    supplier: document.getElementById("supplier")?.value?.trim(),
+    category: document.getElementById("category")?.value?.trim(),
     quantity: Number(document.getElementById("quantity")?.value)
   };
+
+  // Check if any required value is null, undefined, empty, or 0
+  const isValid = Object.entries(product).every(([key, value]) => {
+    // Skip ID check since it's auto-generated
+    if (key === "id") return true;
+
+    // Check for numeric values
+    if (typeof value === "number") {
+      return !isNaN(value) && value > 0;
+    }
+
+    // Check for string values
+    return value !== null && value !== undefined && value !== "";
+  });
+
+  if (!isValid) {
+    alert("Please fill in all fields with valid values!");
+    return;
+  }
 
   if (currentProductId) {
     const index = purchaseData.findIndex((i) => i.id === currentProductId);
@@ -187,7 +235,6 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
   saveToLocalStorage();
   tableRender();
   modal.style.display = "none";
-
   document.getElementById("addProductForm").reset();
 });
 
@@ -224,7 +271,6 @@ window.editProduct = function (id) {
   console.log(currentProductId);
   const product = purchaseData.find((p) => p.id === id);
   (document.getElementById("productName").value = product.productName),
-    // (document.getElementById("stockQuantity").value = product.stockQuantity),
     (document.getElementById("costPrice").value = product.costPrice),
     (document.getElementById("sellingPrice").value = product.sellingPrice),
     (document.getElementById("date").value = product.date),
