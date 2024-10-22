@@ -108,6 +108,9 @@ function tableRender(page = 1) {
                 </td>
 
         `;
+    row.addEventListener("click", () => {
+      console.log(product);
+    });
 
     // row.addEventListener("click", () => {
     //   const invoiceUrl = `invoiceTemplate.html`;
@@ -232,7 +235,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     console.log(selectedProducts);
     totalPrice = selectedProducts.reduce((total, product) => {
       return total + product.total;
-    }, 0); // Initial total is 0
+    }, 0);
     console.log(totalPrice);
     formTable();
     console.log(purchaseData);
