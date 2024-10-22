@@ -156,14 +156,14 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
 
   const productName = document.getElementById("productName")?.value;
 
-  const existingProduct = purchaseData.find(
-    (product) => product.productName === productName
-  );
+  // const existingProduct = purchaseData.find(
+  //   (product) => product.productName === productName
+  // );
 
-  if (existingProduct) {
-    alert("Product already exists in the inventory!");
-    return;
-  }
+  // if (existingProduct) {
+  //   alert("Product already exists in the inventory!");
+  //   return;
+  // }
 
   const product = {
     id: currentProductId || Date.now(),
@@ -187,6 +187,8 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
   saveToLocalStorage();
   tableRender();
   modal.style.display = "none";
+
+  document.getElementById("addProductForm").reset();
 });
 
 console.log(currentProductId);

@@ -68,6 +68,7 @@ const modal = document.getElementById("billModal");
 const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
 const priceInput = document.getElementById("sellingPrice");
+const productSelect = document.getElementById("productSelect");
 
 openModalBtn.addEventListener("click", () => {
   modal.style.display = "flex";
@@ -77,6 +78,7 @@ closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
 });
 
+// table render
 function tableRender(page = 1) {
   const tableBody = document.querySelector("#salesTable tbody");
   tableBody.innerHTML = "";
@@ -146,8 +148,6 @@ document
 // Initial render
 tableRender(currentPage);
 
-const productSelect = document.getElementById("productSelect");
-
 // function populateDropdown(purchaseData) {
 //   purchaseData.forEach((productObj) => {
 //     // Create a new option element
@@ -161,6 +161,8 @@ const productSelect = document.getElementById("productSelect");
 
 // populateDropdown(purchaseData);
 console.log(purchaseData);
+
+// dropDown the all products
 function populateDropdown(purchaseData) {
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
@@ -190,6 +192,7 @@ productSelect.addEventListener("change", (event) => {
   }
 });
 
+// add products in form
 document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -222,12 +225,12 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   }
 });
 console.log(selectedProducts, "vv");
-/// Add Customer Bill
 
+/// Add Customer Bill
 document.getElementById("addProductForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const newCustomer = {
-    id: Date.now(),
+    id: currentCustomerId || Date.now(),
     customerName: document.getElementById("customerName").value,
     date: document.getElementById("date").value,
     products: selectedProducts,
@@ -235,9 +238,7 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
     grandTotal: 50
   };
 
-  newCustomer.products.length === 0
-    ? alert("fill the product")
-    : customerData.unshift(newCustomer);
+  customerData.unshift(newCustomer);
   console.log(customerData);
   document.getElementById("customerName").value = "";
   document.getElementById("date").value = "";
@@ -247,6 +248,21 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
   saveToLocalStorage();
 });
 
+// Edit in SalesTable
+
+window.editProduct = function (id) {
+  currentCustomerId = id;
+  console.log(currentCustomerId);
+  const customer = customerData.find(
+    (customer) => customer.id === currentCustomerId
+  );
+  console.log(customer);
+  document.getElementById("customerName").value = customer.customerName;
+  document.getElementById("date").value = customer.date;
+  modal.style.display = "flex";
+};
+
+//  form table function
 function formTable() {
   const tableBody = document.querySelector("#productsTable tbody");
   tableBody.innerHTML = "";
@@ -273,4 +289,4 @@ function formTable() {
 formTable();
 console.log(purchaseData);
 
-console.log("jjjj");
+///
