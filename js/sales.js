@@ -67,6 +67,7 @@ let currentCustomerId;
 let currentItemId;
 let itemsPerPage = 5; // Default items per page
 let currentPage = 1;
+let totalPrice;
 let selectedProducts = [];
 
 // console.log(purchaseData);
@@ -229,6 +230,10 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     priceInput.value = "";
     document.getElementById("quantity").value = "";
     console.log(selectedProducts);
+    totalPrice = selectedProducts.reduce((total, product) => {
+      return total + product.total;
+    }, 0); // Initial total is 0
+    console.log(totalPrice);
     formTable();
     console.log(purchaseData);
 
@@ -239,8 +244,6 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
 });
 console.log(selectedProducts, "vv");
 
-/// Add Customer Bill
-
 document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const newCustomer = {
@@ -248,8 +251,7 @@ document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
     customerName: document.getElementById("customerName").value,
     date: document.getElementById("date").value,
     products: selectedProducts,
-    sellingPrice: document.getElementById("sellingPrice").value,
-    grandTotal: 50
+    grandTotal: totalPrice
   };
   if (currentCustomerId) {
     const index = customerData.findIndex((i) => i.id === currentCustomerId);
@@ -323,3 +325,5 @@ window.deleteCustomer = function (id) {
   customerData = customerData.filter((d) => d.id !== id);
   tableRender();
 };
+
+console.log(selectedProducts);
