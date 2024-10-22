@@ -108,9 +108,9 @@ function tableRender(page = 1) {
                 </td>
 
         `;
-    row.addEventListener("click", () => {
-      console.log(product);
-    });
+    // row.addEventListener("click", () => {
+    //   console.log(product);
+    // });
 
     // row.addEventListener("click", () => {
     //   const invoiceUrl = `invoiceTemplate.html`;
@@ -118,6 +118,15 @@ function tableRender(page = 1) {
     //   // Open invoice.html in a new tab
     //   window.open(invoiceUrl);
     // });
+
+    row.addEventListener("click", () => {
+      // Store the full data in localStorage
+      localStorage.setItem("invoiceData", JSON.stringify(product));
+      // Also pass the ID in URL for backup
+      const invoiceUrl = `invoiceTemplate.html?id=${product.id}`;
+      window.open(invoiceUrl);
+    });
+
     tableBody.appendChild(row);
   });
   renderPaginationControls();
@@ -226,7 +235,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       const index = selectedProducts.findIndex((i) => i.id === currentItemId);
       selectedProducts[index] = allItems;
     } else {
-      selectedProducts.push(allItems);
+      selectedProducts.push(...allItems);
     }
 
     productSelect.value = "";
