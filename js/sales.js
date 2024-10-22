@@ -1,5 +1,7 @@
-import { purchaseData } from "./script.js";
-console.log(purchaseData);
+import { purchaseData as purchaseDataAll } from "./script.js";
+console.log(purchaseDataAll);
+const purchaseData = purchaseDataAll.map((products) => products);
+console.log(purchaseData, "map");
 let initialCustomerData = [
   {
     id: 1,
