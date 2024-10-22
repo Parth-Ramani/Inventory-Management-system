@@ -64,6 +64,7 @@ function saveToLocalStorage() {
 }
 
 let currentCustomerId;
+let currentItemId;
 let itemsPerPage = 5; // Default items per page
 let currentPage = 1;
 let selectedProducts = [];
@@ -77,6 +78,7 @@ const productSelect = document.getElementById("productSelect");
 
 openModalBtn.addEventListener("click", () => {
   modal.style.display = "flex";
+  formTable();
 });
 
 closeModalBtn.addEventListener("click", () => {
@@ -101,7 +103,7 @@ function tableRender(page = 1) {
 <td>${product.grandTotal}</td>
   <td class="action-icons">
                     <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
-                    <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+                    <i class="fas fa-trash-alt" onclick="deleteCustomer(${product.id})"></i>
                 </td>
 
         `;
@@ -208,14 +210,20 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     const selectedProduct = purchaseData.find(
       (product) => product.productName === selectedProductName
     );
-
-    selectedProducts.push({
+    const allItems = {
       product: selectedProductName,
       sellingPrice: selectedPrice,
       quantity: document.getElementById("quantity").value,
-      id: selectedProduct.id,
+      id: currentItemId || selectedProduct.id,
       total: selectedPrice * document.getElementById("quantity").value
-    });
+    };
+
+    if (currentItemId) {
+      const index = selectedProducts.findIndex((i) => i.id === currentItemId);
+      selectedProducts[index] = allItems;
+    } else {
+      selectedProducts.push(allItems);
+    }
 
     productSelect.value = "";
     priceInput.value = "";
@@ -233,39 +241,39 @@ console.log(selectedProducts, "vv");
 
 /// Add Customer Bill
 
-document.getElementById("onsubmit")?.addEventListener("click", () => {
-  console.log("submited");
+document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const newCustomer = {
+    id: currentCustomerId || Date.now(),
+    customerName: document.getElementById("customerName").value,
+    date: document.getElementById("date").value,
+    products: selectedProducts,
+    sellingPrice: document.getElementById("sellingPrice").value,
+    grandTotal: 50
+  };
+  if (currentCustomerId) {
+    const index = customerData.findIndex((i) => i.id === currentCustomerId);
+    customerData[index] = newCustomer;
+  } else {
+    customerData.unshift(newCustomer);
+  }
+
+  console.log(customerData);
+  document.getElementById("customerName").value = "";
+  document.getElementById("date").value = "";
+  modal.style.display = "none";
+
+  tableRender();
+  saveToLocalStorage();
 });
-
-// document.getElementById("addProductForm").addEventListener("submit", (e) => {
-//   e.preventDefault();
-//   const newCustomer = {
-//     id: currentCustomerId || Date.now(),
-//     customerName: document.getElementById("customerName").value,
-//     date: document.getElementById("date").value,
-//     products: selectedProducts,
-//     sellingPrice: document.getElementById("sellingPrice").value,
-//     grandTotal: 50
-//   };
-
-//   customerData.unshift(newCustomer);
-//   console.log(customerData);
-//   document.getElementById("customerName").value = "";
-//   document.getElementById("date").value = "";
-//   modal.style.display = "none";
-
-//   tableRender();
-//   saveToLocalStorage();
-// });
 
 // Edit in SalesTable
 
 window.editProduct = function (id) {
   currentCustomerId = id;
   console.log(currentCustomerId);
-  const customer = customerData.find(
-    (customer) => customer.id === currentCustomerId
-  );
+  // console.log(currentCustomerId);
+  const customer = customerData.find((customer) => customer.id === id);
   console.log(customer);
   document.getElementById("customerName").value = customer.customerName;
   document.getElementById("date").value = customer.date;
@@ -284,7 +292,7 @@ function formTable() {
 <td>${product.sellingPrice}</td>
 <td>${product.total}</td>
 <td class="action-icons">
-                    <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+                    <i class="fas fa-edit" onclick="editItems(${product.id})"></i>
                     <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
                 </td>
         `;
@@ -296,7 +304,22 @@ function formTable() {
   });
 }
 
-formTable();
+// formTable();
 console.log(purchaseData);
 
-///
+///Edit Products in Table
+
+window.editItems = function (id) {
+  currentItemId = id;
+  console.log(currentItemId);
+  const items = selectedProducts.find((item) => item.id === id);
+  console.log(items);
+  document.getElementById("productSelect").value = items.product;
+  document.getElementById("quantity").value = items.quantity;
+  document.getElementById("sellingPrice").value = items.sellingPrice;
+};
+
+window.deleteCustomer = function (id) {
+  customerData = customerData.filter((d) => d.id !== id);
+  tableRender();
+};

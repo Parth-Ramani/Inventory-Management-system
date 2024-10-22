@@ -165,15 +165,14 @@ function addingProducts() {
     // }
 
     const product = {
-      l: "dddd"
-      // id: currentProductId || Date.now(),
-      // productName: productName,
-      // costPrice: Number(document.getElementById("costPrice")?.value),
-      // sellingPrice: Number(document.getElementById("sellingPrice")?.value),
-      // date: document.getElementById("date")?.value,
-      // supplier: document.getElementById("supplier")?.value,
-      // category: document.getElementById("category")?.value,
-      // quantity: Number(document.getElementById("quantity")?.value)
+      id: currentProductId || Date.now(),
+      productName: productName,
+      costPrice: Number(document.getElementById("costPrice")?.value),
+      sellingPrice: Number(document.getElementById("sellingPrice")?.value),
+      date: document.getElementById("date")?.value,
+      supplier: document.getElementById("supplier")?.value,
+      category: document.getElementById("category")?.value,
+      quantity: Number(document.getElementById("quantity")?.value)
     };
 
     if (currentProductId) {

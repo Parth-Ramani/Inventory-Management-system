@@ -117,7 +117,7 @@
                     <span class="close" id="closeModal">&times;</span>
                 </div>
                 <div class="modal-body"></div>
-                <form id="CustomerAddForm">
+                <form id="CustomerAddForm" method="POST">
                     <input type="hidden" id="productId">
                     <input type="text" id="customerName" placeholder="Customer Name" required>
                     <input type="date" id="date" required>
@@ -133,7 +133,7 @@
                             <option value="books">Books</option>
                             <option value="food">Food</option> -->
                     </select>
-                    <input type="number" id="quantitySale" placeholder="Quantity" required>
+                    <input type="number" id="quantity" placeholder="Quantity" required>
                     <input type="number" id="sellingPrice" placeholder="Selling Price" required>
 
                     <button type="submit">Add Product</button>
