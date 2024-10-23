@@ -224,7 +224,71 @@ productSelect.addEventListener("change", (event) => {
   }
 });
 
-// add products in form
+// // add products in form
+// document.getElementById("innerForm")?.addEventListener("submit", (e) => {
+//   e.preventDefault();
+
+//   const selectedProductName = productSelect.value;
+//   const selectedPrice = priceInput.value;
+
+//   if (selectedProductName && selectedPrice) {
+//     let selectedProduct = purchaseData.find(
+//       (product) => product.productName === selectedProductName
+//     );
+
+//     const allItems = {
+//       product: selectedProductName,
+//       sellingPrice: selectedPrice,
+//       quantity: document.getElementById("quantity").value,
+//       id: currentItemId || selectedProduct.id,
+//       total: selectedPrice * document.getElementById("quantity").value
+//     };
+
+//     if (currentItemId) {
+//       const index = selectedProducts.findIndex((i) => i.id === currentItemId);
+//       selectedProducts[index] = allItems;
+//     } else {
+//       selectedProducts.push(allItems);
+//     }
+
+//     if (selectedProduct.quantity > allItems.quantity) {
+//       let updatequantity = selectedProduct.quantity - allItems.quantity;
+//       selectedProduct.quantity = updatequantity;
+//       console.log(selectedProduct);
+//       // Find the index of the product with the same ID in purchaseData
+//       const productIndex = purchaseData.findIndex(
+//         (product) => product.id === selectedProduct.id
+//       );
+
+//       if (productIndex !== -1) {
+//         purchaseData[productIndex] = selectedProduct;
+
+//         localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+//       }
+
+//       console.log(purchaseData);
+//     } else {
+//       alert(`stocks avaiable only ${selectedProduct.quantity}`);
+//     }
+
+//     productSelect.value = "";
+//     priceInput.value = "";
+//     document.getElementById("quantity").value = "";
+//     console.log(selectedProducts);
+//     totalPrice = selectedProducts.reduce((total, product) => {
+//       return total + product.total;
+//     }, 0);
+//     console.log(totalPrice);
+//     formTable();
+//     console.log(purchaseData);
+
+//     // updateProductList();
+//   } else {
+//     alert("Please select a product and its price.");
+//   }
+// });
+
+// Add products in form
 document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -232,9 +296,17 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   const selectedPrice = priceInput.value;
 
   if (selectedProductName && selectedPrice) {
+    // Find the selected product in purchaseData
     let selectedProduct = purchaseData.find(
       (product) => product.productName === selectedProductName
     );
+
+    // Check if the product already exists in the selectedProducts object
+    if (selectedProducts[selectedProduct.id]) {
+      // If the product is already selected, show an alert and stop further execution
+      alert("Product is already selected or exists in the list.");
+      return;
+    }
 
     const allItems = {
       product: selectedProductName,
@@ -244,49 +316,44 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       total: selectedPrice * document.getElementById("quantity").value
     };
 
-    if (currentItemId) {
-      const index = selectedProducts.findIndex((i) => i.id === currentItemId);
-      selectedProducts[index] = allItems;
-    } else {
-      selectedProducts.push(allItems);
-    }
+    // Add the product to selectedProducts object
+    selectedProducts[selectedProduct.id] = allItems;
 
-    if (selectedProduct.quantity > allItems.quantity) {
-      let updatequantity = selectedProduct.quantity - allItems.quantity;
-      selectedProduct.quantity = updatequantity;
-      console.log(selectedProduct);
-      // Find the index of the product with the same ID in purchaseData
+    // Check if the available quantity is enough
+    if (selectedProduct.quantity >= allItems.quantity) {
+      let updateQuantity = selectedProduct.quantity - allItems.quantity;
+      selectedProduct.quantity = updateQuantity;
+
+      // Update purchaseData
       const productIndex = purchaseData.findIndex(
         (product) => product.id === selectedProduct.id
       );
 
       if (productIndex !== -1) {
         purchaseData[productIndex] = selectedProduct;
-
         localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
       }
-
-      console.log(purchaseData);
     } else {
-      alert(`stocks avaiable only ${selectedProduct.quantity}`);
+      alert(`Stocks available only ${selectedProduct.quantity}`);
     }
 
+    // Reset form fields
     productSelect.value = "";
     priceInput.value = "";
     document.getElementById("quantity").value = "";
-    console.log(selectedProducts);
-    totalPrice = selectedProducts.reduce((total, product) => {
+
+    // Calculate total price
+    totalPrice = Object.values(selectedProducts).reduce((total, product) => {
       return total + product.total;
     }, 0);
-    console.log(totalPrice);
-    formTable();
-    console.log(purchaseData);
 
-    // updateProductList();
+    // Render form table with updated data
+    formTable();
   } else {
     alert("Please select a product and its price.");
   }
 });
+
 console.log(selectedProducts, "vv");
 
 document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
@@ -377,6 +444,8 @@ window.editItems = function (id) {
 
 window.deleteCustomer = function (id) {
   customerData = customerData.filter((d) => d.id !== id);
+  localStorage.setItem("customerData", JSON.stringify(customerData));
+
   tableRender();
 };
 
