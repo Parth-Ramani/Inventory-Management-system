@@ -86,7 +86,50 @@ closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
 });
 
-// table render
+// // table render
+// function tableRender(page = 1) {
+//   const tableBody = document.querySelector("#salesTable tbody");
+//   tableBody.innerHTML = "";
+//   const start = (page - 1) * itemsPerPage;
+//   const end = start + itemsPerPage;
+
+//   const paginatedData = customerData.slice(start, end);
+//   console.log(paginatedData);
+//   paginatedData.forEach((product) => {
+//     const row = document.createElement("tr");
+//     row.innerHTML = `
+
+//         <td>${product.customerName}</td>
+// <td>${product.date}</td>
+// <td>${product.grandTotal}</td>
+//   <td class="action-icons">
+//                     <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+//                     <i class="fas fa-trash-alt" onclick="deleteCustomer(${product.id})"></i>
+//                 </td>
+
+//         `;
+//     // row.addEventListener("click", () => {
+//     //   console.log(product);
+//     // });
+
+//     // row.addEventListener("click", () => {
+//     //   const invoiceUrl = `invoiceTemplate.html`;
+//     //   console.log(invoiceUrl);
+//     //   // Open invoice.html in a new tab
+//     //   window.open(invoiceUrl);
+//     // });
+
+//     row.addEventListener("click", () => {
+//       localStorage.setItem("invoiceData", JSON.stringify(product));
+//       const invoiceUrl = `invoiceTemplate.html?id=${product.id}`;
+//       window.open(invoiceUrl);
+//     });
+
+//     tableBody.appendChild(row);
+//   });
+//   renderPaginationControls();
+// }
+
 function tableRender(page = 1) {
   const tableBody = document.querySelector("#salesTable tbody");
   tableBody.innerHTML = "";
@@ -95,40 +138,47 @@ function tableRender(page = 1) {
 
   const paginatedData = customerData.slice(start, end);
   console.log(paginatedData);
+
   paginatedData.forEach((product) => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${product.customerName}</td>
+      <td>${product.date}</td>
+      <td>${product.grandTotal}</td>
+      <td class="action-icons">
+        <i class="fas fa-edit" data-action="edit"></i>
+        <i class="fas fa-trash-alt" data-action="delete"></i>
+      </td>
+    `;
 
-        <td>${product.customerName}</td>
-<td>${product.date}</td>
-<td>${product.grandTotal}</td>
-  <td class="action-icons">
-                    <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
-                    <i class="fas fa-trash-alt" onclick="deleteCustomer(${product.id})"></i>
-                </td>
+    row.addEventListener("click", (event) => {
+      const actionCell = event.target.closest(".action-icons");
+      if (actionCell) {
+        return;
+      }
 
-        `;
-    // row.addEventListener("click", () => {
-    //   console.log(product);
-    // });
-
-    // row.addEventListener("click", () => {
-    //   const invoiceUrl = `invoiceTemplate.html`;
-    //   console.log(invoiceUrl);
-    //   // Open invoice.html in a new tab
-    //   window.open(invoiceUrl);
-    // });
-
-    row.addEventListener("click", () => {
-      // Store the full data in localStorage
       localStorage.setItem("invoiceData", JSON.stringify(product));
-      // Also pass the ID in URL for backup
       const invoiceUrl = `invoiceTemplate.html?id=${product.id}`;
       window.open(invoiceUrl);
     });
 
+    // // Add separate event listeners for edit and delete icons
+    // const editIcon = row.querySelector('[data-action="edit"]');
+    // const deleteIcon = row.querySelector('[data-action="delete"]');
+
+    // editIcon.addEventListener("click", (event) => {
+    //   event.stopPropagation(); // Prevent event from bubbling up to row
+    //   editProduct(product.id);
+    // });
+
+    // deleteIcon.addEventListener("click", (event) => {
+    //   event.stopPropagation(); // Prevent event from bubbling up to row
+    //   deleteCustomer(product.id);
+    // });
+
     tableBody.appendChild(row);
   });
+
   renderPaginationControls();
 }
 
@@ -236,7 +286,6 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
 
     if (selectedProduct.quantity > allItems.quantity) {
       let updatequantity = selectedProduct.quantity - allItems.quantity;
-      console.log(updatequantity, "updatedquantity");
       selectedProduct.quantity = updatequantity;
       console.log(selectedProduct);
       // Find the index of the product with the same ID in purchaseData
@@ -248,7 +297,6 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
         purchaseData[productIndex] = selectedProduct;
 
         localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
-      } else {
       }
 
       console.log(purchaseData);
