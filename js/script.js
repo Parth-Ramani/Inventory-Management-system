@@ -155,14 +155,14 @@ function addingProducts() {
 
     const productName = document.getElementById("productName")?.value;
 
-    // const existingProduct = purchaseData.find(
-    //   (product) => product.productName === productName
-    // );
-
-    // if (existingProduct) {
-    //   alert("Product already exists in the inventory!");
-    //   return;
-    // }
+    const existingProduct = purchaseData.find(
+      (product) => product.productName === productName
+    );
+    console.log(existingProduct);
+    if (existingProduct) {
+      alert("Product already exists in the inventory!");
+      return;
+    }
 
     const product = {
       id: currentProductId || Date.now(),
@@ -261,6 +261,7 @@ const totalItems = purchaseData.reduce((total, item) => {
 
 window.deleteProduct = function (id) {
   purchaseData = purchaseData.filter((d) => d.id !== id);
+  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
   tableRender();
 };
 
