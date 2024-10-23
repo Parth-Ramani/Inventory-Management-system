@@ -3,7 +3,7 @@ if (document.referrer === "") {
 }
 import { purchaseData as purchaseDataAll } from "./script.js";
 console.log(purchaseDataAll);
-const purchaseData = purchaseDataAll.map((products) => products);
+let purchaseData = purchaseDataAll.map((products) => products);
 console.log(purchaseData, "map");
 let initialCustomerData = [
   {
@@ -195,6 +195,7 @@ function populateDropdown(purchaseData) {
     const option = document.createElement("option");
     option.value = productObj.productName;
     option.textContent = productObj.productName;
+
     productSelect.appendChild(option);
   });
 }
@@ -207,6 +208,7 @@ productSelect.addEventListener("change", (event) => {
   const selectedProduct = purchaseData.find(
     (product) => product.productName === selectedProductName
   );
+  console.log(selectedProduct, "selectedProduct");
   if (selectedProduct) {
     priceInput.value = selectedProduct.sellingPrice;
   }
@@ -220,9 +222,10 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   const selectedPrice = priceInput.value;
 
   if (selectedProductName && selectedPrice) {
-    const selectedProduct = purchaseData.find(
+    let selectedProduct = purchaseData.find(
       (product) => product.productName === selectedProductName
     );
+
     const allItems = {
       product: selectedProductName,
       sellingPrice: selectedPrice,
@@ -231,11 +234,33 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       total: selectedPrice * document.getElementById("quantity").value
     };
 
+    if (selectedProduct.quantity > allItems.quantity) {
+      let updatequantity = selectedProduct.quantity - allItems.quantity;
+      console.log(updatequantity, "updatedquantity");
+      selectedProduct.quantity = updatequantity;
+      console.log(selectedProduct);
+      // Find the index of the product with the same ID in purchaseData
+      const productIndex = purchaseData.findIndex(
+        (product) => product.id === selectedProduct.id
+      );
+
+      if (productIndex !== -1) {
+        purchaseData[productIndex] = selectedProduct;
+
+        localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+      } else {
+      }
+
+      console.log(purchaseData);
+    } else {
+      alert(`stocks avaiable only ${selectedProduct.quantity}`);
+    }
+
     if (currentItemId) {
       const index = selectedProducts.findIndex((i) => i.id === currentItemId);
       selectedProducts[index] = allItems;
     } else {
-      selectedProducts.push(...allItems);
+      selectedProducts.push(allItems);
     }
 
     productSelect.value = "";
