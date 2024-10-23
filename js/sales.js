@@ -79,7 +79,7 @@ const productSelect = document.getElementById("productSelect");
 
 openModalBtn.addEventListener("click", () => {
   modal.style.display = "flex";
-  formTable();
+  // formTable();
 });
 
 closeModalBtn.addEventListener("click", () => {
