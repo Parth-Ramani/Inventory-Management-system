@@ -83,6 +83,8 @@ openModalBtn.addEventListener("click", () => {
 });
 
 closeModalBtn.addEventListener("click", () => {
+  document.getElementById("customerName").value = "";
+  document.getElementById("date").value = "";
   modal.style.display = "none";
 });
 
@@ -242,6 +244,13 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       total: selectedPrice * document.getElementById("quantity").value
     };
 
+    if (currentItemId) {
+      const index = selectedProducts.findIndex((i) => i.id === currentItemId);
+      selectedProducts[index] = allItems;
+    } else {
+      selectedProducts.push(allItems);
+    }
+
     if (selectedProduct.quantity > allItems.quantity) {
       let updatequantity = selectedProduct.quantity - allItems.quantity;
       selectedProduct.quantity = updatequantity;
@@ -260,13 +269,6 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       console.log(purchaseData);
     } else {
       alert(`stocks avaiable only ${selectedProduct.quantity}`);
-    }
-
-    if (currentItemId) {
-      const index = selectedProducts.findIndex((i) => i.id === currentItemId);
-      selectedProducts[index] = allItems;
-    } else {
-      selectedProducts.push(allItems);
     }
 
     productSelect.value = "";
