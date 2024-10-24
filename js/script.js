@@ -149,19 +149,23 @@ document
 tableRender(currentPage);
 
 // add product
+
 function addingProducts() {
   document.getElementById("addProductForm")?.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const productName = document.getElementById("productName")?.value;
 
-    const existingProduct = purchaseData.find(
-      (product) => product.productName === productName
-    );
-    console.log(existingProduct);
-    if (existingProduct) {
-      alert("Product already exists in the inventory!");
-      return;
+    // Check for duplicate product name only when adding new product (not editing)
+    if (!currentProductId) {
+      const productExists = purchaseData.some(
+        (item) => item.productName.toLowerCase() === productName.toLowerCase()
+      );
+
+      if (productExists) {
+        alert("This product already exists in inventory!");
+        return;
+      }
     }
 
     const product = {
@@ -176,67 +180,30 @@ function addingProducts() {
     };
 
     if (currentProductId) {
+      // Editing existing product
       const index = purchaseData.findIndex((i) => i.id === currentProductId);
-      purchaseData[index] = product;
+      if (index !== -1) {
+        purchaseData[index] = product;
+        console.log("Product updated successfully!");
+      }
     } else {
+      // Adding new product
       purchaseData.unshift(product);
+      console.log("New product added successfully!");
     }
 
+    // Save, render, and reset
     saveToLocalStorage();
     tableRender();
     modal.style.display = "none";
 
+    // Reset the form and currentProductId
     document.getElementById("addProductForm").reset();
+    currentProductId = null;
   });
 }
 
 addingProducts();
-// document.getElementById("addProductForm").addEventListener("submit", (e) => {
-//   e.preventDefault();
-
-//   // Get all values first
-//   const product = {
-//     id: currentProductId || Date.now(),
-//     productName: document.getElementById("productName")?.value?.trim(),
-//     costPrice: Number(document.getElementById("costPrice")?.value),
-//     sellingPrice: Number(document.getElementById("sellingPrice")?.value),
-//     date: document.getElementById("date")?.value?.trim(),
-//     supplier: document.getElementById("supplier")?.value?.trim(),
-//     category: document.getElementById("category")?.value?.trim(),
-//     quantity: Number(document.getElementById("quantity")?.value)
-//   };
-
-//   // Check if any required value is null, undefined, empty, or 0
-//   const isValid = Object.entries(product).every(([key, value]) => {
-//     // Skip ID check since it's auto-generated
-//     if (key === "id") return true;
-
-//     // Check for numeric values
-//     if (typeof value === "number") {
-//       return !isNaN(value) && value > 0;
-//     }
-
-//     // Check for string values
-//     return value !== null && value !== undefined && value !== "";
-//   });
-
-//   if (!isValid) {
-//     alert("Please fill in all fields with valid values!");
-//     return;
-//   }
-
-//   if (currentProductId) {
-//     const index = purchaseData.findIndex((i) => i.id === currentProductId);
-//     purchaseData[index] = product;
-//   } else {
-//     purchaseData.unshift(product);
-//   }
-
-//   saveToLocalStorage();
-//   tableRender();
-//   modal.style.display = "none";
-//   document.getElementById("addProductForm").reset();
-// });
 
 console.log(currentProductId);
 console.log(purchaseData);
