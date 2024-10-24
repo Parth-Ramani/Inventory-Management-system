@@ -178,26 +178,22 @@ function addingProducts() {
       category: document.getElementById("category")?.value,
       quantity: Number(document.getElementById("quantity")?.value)
     };
-
+    console.log(currentProductId, "currentProductId");
     if (currentProductId) {
       // Editing existing product
       const index = purchaseData.findIndex((i) => i.id === currentProductId);
+      console.log(index, "index");
       if (index !== -1) {
         purchaseData[index] = product;
-        console.log("Product updated successfully!");
       }
     } else {
-      // Adding new product
       purchaseData.unshift(product);
-      console.log("New product added successfully!");
     }
 
-    // Save, render, and reset
     saveToLocalStorage();
-    tableRender();
+    // tableRender();
     modal.style.display = "none";
 
-    // Reset the form and currentProductId
     document.getElementById("addProductForm").reset();
     currentProductId = null;
   });

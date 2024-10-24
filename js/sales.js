@@ -246,26 +246,16 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       total: selectedPrice * document.getElementById("quantity").value
     };
 
-    // // Only check for duplicates if we're adding a new item (not editing)
-    // if (!currentItemId) {
-    //   // Check if the product already exists in the selectedProducts array
-    //   const productExists = selectedProducts.some(
-    //     (product) => product.id === selectedProduct.id
-    //   );
-    //   console.log(productExists,"product exist");
-    //   if (productExists) {
-    //     alert("Product is already selected or exists in the list.");
-    //     return;
-    //   }
-    // }
-
-    // check if i am adding same product not editing product in list then show me msg
+    // Only check for duplicates if we're adding a new item (not editing)
     if (!currentItemId) {
-      const existingProdcut = selectedProducts.some(
-        (product) => product.id === selectedProduct
+      // Check if the product already exists in the selectedProducts array
+      const productExists = selectedProducts.some(
+        (product) => product.id === selectedProduct.id
       );
-      if (existingProdcut) {
-        alert("product is existing");
+      console.log(productExists, "product exist");
+      if (productExists) {
+        alert("Product is already selected or exists in the list.");
+        return;
       }
     }
 
@@ -355,7 +345,6 @@ document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
   document.getElementById("date").value = "";
   modal.style.display = "none";
 
-  tableRender();
   saveToLocalStorage();
 });
 
