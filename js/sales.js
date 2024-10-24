@@ -304,7 +304,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     totalPrice = selectedProducts.reduce((total, product) => {
       return total + product.total;
     }, 0);
-
+    console.log(totalPrice, "total price");
     // Render form table with updated data
     formTable();
 
@@ -319,6 +319,10 @@ console.log(selectedProducts, "vv");
 
 document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
   e.preventDefault();
+  totalPrice = selectedProducts.reduce((total, product) => {
+    return total + product.total;
+  }, 0);
+
   const newCustomer = {
     id: currentCustomerId || Date.now(),
     customerName: document.getElementById("customerName").value,
