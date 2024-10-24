@@ -72,6 +72,8 @@
                 <li> <a href="index.html">Home</a></li>
                 <li> <a href="dashboard.html">Purchase Dashboard</a></li>
                 <li> <a href="sales.html" class="active">Sales Dashboard</a></li>
+                <li> <a href="analystDashboard.html" class="active">Sales Dashboard</a></li>
+
             </ul>
         </nav>
     </header>
@@ -80,6 +82,15 @@
             <h1>Sales Management Dashboard</h1>
 
             <button id="openModal" class="toggle-btn">Add Bill</button>
+            <div class="container">
+                <h1>Date-wise Sales Total</h1>
+                <label for="dateInput">Select Date:</label>
+                <input type="date" id="dateInput" />
+
+                <button id="calculateTotalBtn">Calculate Total</button>
+
+                <div class="result" id="result"></div>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Sales Transactions</h2>
@@ -162,7 +173,7 @@
         </div>
         </div>
     </main>
-    <script type="module" src="js/sales.js"></script>
+    <script type="module" src="js/sales.js" defer></script>
 
 </body>
 
