@@ -233,7 +233,6 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
   const selectedPrice = priceInput.value;
 
   if (selectedProductName && selectedPrice) {
-    // Find the selected product in purchaseData
     let selectedProduct = purchaseData.find(
       (product) => product.productName === selectedProductName
     );
@@ -246,9 +245,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       total: selectedPrice * document.getElementById("quantity").value
     };
 
-    // Only check for duplicates if we're adding a new item (not editing)
     if (!currentItemId) {
-      // Check if the product already exists in the selectedProducts array
       const productExists = selectedProducts.some(
         (product) => product.id === selectedProduct.id
       );
@@ -260,10 +257,8 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     }
 
     if (currentItemId) {
-      // Editing existing product
       const index = selectedProducts.findIndex((i) => i.id === currentItemId);
       if (index !== -1) {
-        // Update the existing product
         selectedProducts[index] = allItems;
       }
     } else {
@@ -273,13 +268,11 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
 
     // Check if the available quantity is enough
     if (selectedProduct.quantity >= allItems.quantity) {
-      // If editing, restore the previous quantity before calculating new quantity
       if (currentItemId) {
         const existingProduct = selectedProducts.find(
           (p) => p.id === currentItemId
         );
         if (existingProduct) {
-          // Add back the previous quantity before subtracting new quantity
           selectedProduct.quantity += parseInt(existingProduct.quantity);
         }
       }
@@ -305,7 +298,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     productSelect.value = "";
     priceInput.value = "";
     document.getElementById("quantity").value = "";
-    currentItemId = null; // Reset currentItemId after successful edit
+    currentItemId = null;
 
     // Calculate total price
     totalPrice = selectedProducts.reduce((total, product) => {
@@ -331,7 +324,7 @@ document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
     customerName: document.getElementById("customerName").value,
     date: document.getElementById("date").value,
     products: selectedProducts,
-    grandTotal: totalPrice
+    grandTotal: totalPrice ?? "0"
   };
   if (currentCustomerId) {
     const index = customerData.findIndex((i) => i.id === currentCustomerId);
@@ -344,7 +337,7 @@ document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
   document.getElementById("customerName").value = "";
   document.getElementById("date").value = "";
   modal.style.display = "none";
-
+  tableRender();
   saveToLocalStorage();
 });
 
@@ -383,7 +376,7 @@ function formTable() {
 <td>${product.total}</td>
 <td class="action-icons">
                     <i class="fas fa-edit" onclick="editItems(${product.id})"></i>
-                    <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+                    <i class="fas fa-trash-alt" onclick="removeItem(${product.id})"></i>
                 </td>
         `;
     // row.addEventListener("click", () => {
@@ -414,6 +407,41 @@ window.deleteCustomer = function (id) {
   localStorage.setItem("customerData", JSON.stringify(customerData));
 
   tableRender();
+};
+
+window.removeItem = function (id) {
+  const selectedProduct = selectedProducts.find((prod) => prod.id === id);
+
+  // if (!selectedProduct) {
+  //   console.error("Selected product not found");
+  //   return;
+  // }
+
+  // Find the product in purchaseData
+  const index = purchaseData.findIndex(
+    (product) => product.id === selectedProduct.id
+  );
+
+  // if (index === -1) {
+  //   console.error("Product not found in purchase data");
+  //   return;
+  // }
+
+  // Add back the quantity
+  purchaseData[index].quantity += Number(selectedProduct.quantity);
+
+  // Remove the item from selectedProducts array
+  const selectedIndex = selectedProducts.findIndex((prod) => prod.id === id);
+  if (selectedIndex !== -1) {
+    selectedProducts.splice(selectedIndex, 1);
+  }
+
+  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+
+  formTable();
+
+  console.log("Updated quantity:", purchaseData[index].quantity);
+  console.log("Updated purchaseData:", purchaseData);
 };
 
 console.log(selectedProducts);
