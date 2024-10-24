@@ -47,11 +47,11 @@ const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
 
 // Open modal box
-openModalBtn.addEventListener("click", () => {
+openModalBtn?.addEventListener("click", () => {
   modal.style.display = "flex";
 });
 // close modal box
-closeModalBtn.addEventListener("click", () => {
+closeModalBtn?.addEventListener("click", () => {
   modal.style.display = "none";
 });
 

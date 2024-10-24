@@ -3,6 +3,7 @@ if (document.referrer === "") {
 }
 import { purchaseData as purchaseDataAll } from "./script.js";
 console.log(purchaseDataAll);
+// console.log(purchaseData);
 let purchaseData = purchaseDataAll.map((products) => products);
 console.log(purchaseData, "map");
 let initialCustomerData = [
@@ -77,12 +78,12 @@ const closeModalBtn = document.getElementById("closeModal");
 const priceInput = document.getElementById("sellingPrice");
 const productSelect = document.getElementById("productSelect");
 
-openModalBtn.addEventListener("click", () => {
+openModalBtn?.addEventListener("click", () => {
   modal.style.display = "flex";
   // formTable();
 });
 
-closeModalBtn.addEventListener("click", () => {
+closeModalBtn?.addEventListener("click", () => {
   document.getElementById("customerName").value = "";
   document.getElementById("date").value = "";
   modal.style.display = "none";
@@ -92,16 +93,17 @@ closeModalBtn.addEventListener("click", () => {
 
 function tableRender(page = 1) {
   const tableBody = document.querySelector("#salesTable tbody");
-  tableBody.innerHTML = "";
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
+  if (tableBody) {
+    tableBody.innerHTML = "";
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
 
-  const paginatedData = customerData.slice(start, end);
-  console.log(paginatedData);
+    const paginatedData = customerData.slice(start, end);
+    console.log(paginatedData);
 
-  paginatedData.forEach((product) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+    paginatedData.forEach((product) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
       <td>${product.customerName}</td>
       <td>${product.date}</td>
       <td>${product.grandTotal}</td>
@@ -111,60 +113,132 @@ function tableRender(page = 1) {
       </td>
     `;
 
-    row.addEventListener("click", (event) => {
-      // const actionCell = event.target.closest(".action-icons");
-      // if (actionCell) {
-      //   return;
-      // }
+      row.addEventListener("click", (event) => {
+        // const actionCell = event.target.closest(".action-icons");
+        // if (actionCell) {
+        //   return;
+        // }
 
-      localStorage.setItem("invoiceData", JSON.stringify(product));
-      const invoiceUrl = `invoiceTemplate.html?id=${product.id}`;
-      window.open(invoiceUrl);
+        localStorage.setItem("invoiceData", JSON.stringify(product));
+        const invoiceUrl = `invoiceTemplate.html?id=${product.id}`;
+        window.open(invoiceUrl);
+      });
+
+      // Add separate event listeners for edit and delete icons
+      const editIcon = row.querySelector('[data-action="edit"]');
+      const deleteIcon = row.querySelector('[data-action="delete"]');
+
+      editIcon.addEventListener("click", (event) => {
+        event.stopPropagation();
+        editProduct(product.id);
+      });
+
+      deleteIcon.addEventListener("click", (event) => {
+        event.stopPropagation();
+        deleteCustomer(product.id);
+      });
+
+      tableBody.appendChild(row);
     });
+  }
+  // tableBody.innerHTML = "";
+  // const start = (page - 1) * itemsPerPage;
+  // const end = start + itemsPerPage;
 
-    // Add separate event listeners for edit and delete icons
-    const editIcon = row.querySelector('[data-action="edit"]');
-    const deleteIcon = row.querySelector('[data-action="delete"]');
+  // const paginatedData = customerData.slice(start, end);
+  // console.log(paginatedData);
 
-    editIcon.addEventListener("click", (event) => {
-      event.stopPropagation();
-      editProduct(product.id);
-    });
+  // paginatedData.forEach((product) => {
+  //   const row = document.createElement("tr");
+  //   row.innerHTML = `
+  //     <td>${product.customerName}</td>
+  //     <td>${product.date}</td>
+  //     <td>${product.grandTotal}</td>
+  //     <td class="action-icons">
+  //       <i class="fas fa-edit" data-action="edit"></i>
+  //       <i class="fas fa-trash-alt" data-action="delete"></i>
+  //     </td>
+  //   `;
 
-    deleteIcon.addEventListener("click", (event) => {
-      event.stopPropagation();
-      deleteCustomer(product.id);
-    });
+  //   row.addEventListener("click", (event) => {
+  //     // const actionCell = event.target.closest(".action-icons");
+  //     // if (actionCell) {
+  //     //   return;
+  //     // }
 
-    tableBody.appendChild(row);
-  });
+  //     localStorage.setItem("invoiceData", JSON.stringify(product));
+  //     const invoiceUrl = `invoiceTemplate.html?id=${product.id}`;
+  //     window.open(invoiceUrl);
+  //   });
+
+  //   // Add separate event listeners for edit and delete icons
+  //   const editIcon = row.querySelector('[data-action="edit"]');
+  //   const deleteIcon = row.querySelector('[data-action="delete"]');
+
+  //   editIcon.addEventListener("click", (event) => {
+  //     event.stopPropagation();
+  //     editProduct(product.id);
+  //   });
+
+  //   deleteIcon.addEventListener("click", (event) => {
+  //     event.stopPropagation();
+  //     deleteCustomer(product.id);
+  //   });
+
+  //   tableBody.appendChild(row);
+  // });
 
   renderPaginationControls();
 }
 
 function renderPaginationControls() {
   const paginationControls = document.getElementById("paginationControls");
-  paginationControls.innerHTML = "";
+  if (paginationControls) {
+    paginationControls.innerHTML = "";
 
-  const totalItems = purchaseData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const totalItems = purchaseData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  for (let i = 1; i <= totalPages; i++) {
-    const button = document.createElement("button");
-    button.textContent = i;
-    button.classList.add("pagination-btn");
+    for (let i = 1; i <= totalPages; i++) {
+      const button = document.createElement("button");
+      button.textContent = i;
+      button.classList.add("pagination-btn");
 
-    if (i === currentPage) {
-      button.classList.add("active");
+      if (i === currentPage) {
+        button.classList.add("active");
+      }
+
+      button.addEventListener("click", function () {
+        currentPage = i;
+        tableRender(currentPage);
+      });
+
+      paginationControls.appendChild(button);
     }
-
-    button.addEventListener("click", function () {
-      currentPage = i;
-      tableRender(currentPage);
-    });
-
-    paginationControls.appendChild(button);
+  } else {
+    console.error("paginationControls element not found in the DOM.");
   }
+  // paginationControls.innerHTML = "";
+
+  // const totalItems = purchaseData.length;
+  // const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // for (let i = 1; i <= totalPages; i++) {
+  //   const button = document.createElement("button");
+  //   button.textContent = i;
+  //   button.classList.add("pagination-btn");
+
+  //   if (i === currentPage) {
+  //     button.classList.add("active");
+  //   }
+
+  //   button.addEventListener("click", function () {
+  //     currentPage = i;
+  //     tableRender(currentPage);
+  //   });
+
+  //   paginationControls.appendChild(button);
+  // }
 }
 
 document
@@ -199,21 +273,21 @@ function populateDropdown(purchaseData) {
   defaultOption.textContent = "Select a category";
   defaultOption.selected = true;
   defaultOption.disabled = true;
-  productSelect.appendChild(defaultOption);
+  productSelect?.appendChild(defaultOption);
 
-  purchaseData.forEach((productObj) => {
+  purchaseData?.forEach((productObj) => {
     const option = document.createElement("option");
     option.value = productObj.productName;
     option.textContent = productObj.productName;
 
-    productSelect.appendChild(option);
+    productSelect?.appendChild(option);
   });
 }
 
 // Assuming you already have purchaseData
 populateDropdown(purchaseData);
 
-productSelect.addEventListener("change", (event) => {
+productSelect?.addEventListener("change", (event) => {
   const selectedProductName = event.target.value;
   const selectedProduct = purchaseData.find(
     (product) => product.productName === selectedProductName
@@ -317,7 +391,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
 
 console.log(selectedProducts, "vv");
 
-document.getElementById("CustomerAddForm").addEventListener("submit", (e) => {
+document.getElementById("CustomerAddForm")?.addEventListener("submit", (e) => {
   e.preventDefault();
   totalPrice = selectedProducts.reduce((total, product) => {
     return total + product.total;
@@ -448,4 +522,37 @@ window.removeItem = function (id) {
   console.log("Updated purchaseData:", purchaseData);
 };
 
+document
+  .getElementById("calculateTotalBtn")
+  ?.addEventListener("click", function () {
+    const selectedDate = document.getElementById("dateInput").value;
+    const resultElement = document.getElementById("result");
+
+    if (!selectedDate) {
+      resultElement.textContent = "Please select a date.";
+      return;
+    }
+
+    // Filter customer data by selected date
+    const customersOnDate = customerData.filter(
+      (customer) => customer.date === selectedDate
+    );
+
+    if (customersOnDate.length === 0) {
+      resultElement.textContent = "No sales for the selected date.";
+      return;
+    }
+
+    // Calculate total sales for the selected date
+    const totalSales = customersOnDate.reduce(
+      (total, customer) => total + customer.grandTotal,
+      0
+    );
+    const totalCustomers = customersOnDate.length;
+
+    resultElement.textContent = `Total Sales: $${totalSales} from ${totalCustomers} customers on ${selectedDate}`;
+  });
+
 console.log(selectedProducts);
+
+export default { customerData };
