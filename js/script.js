@@ -48,7 +48,11 @@ const closeModalBtn = document.getElementById("closeModal");
 
 // Open modal box
 openModalBtn?.addEventListener("click", () => {
-  modal.style.display = "flex";
+  openModalBtn?.addEventListener("click", () => {
+    if (modal) {
+      modal.style.display = "flex";
+    }
+  });
 });
 // close modal box
 closeModalBtn?.addEventListener("click", () => {
@@ -69,49 +73,119 @@ function saveToLocalStorage() {
   localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
 }
 
+// // Function to render the table with pagination
+// function tableRender(page = 1) {
+//   const tableBody = document.querySelector("#purchaseTable tbody");
+//   if (tableBody) {
+//     tableBody.innerHTML = "";
+
+//     const start = (page - 1) * itemsPerPage;
+//     const end = start + itemsPerPage;
+
+//     const paginatedData = purchaseData.slice(start, end);
+
+//     paginatedData.forEach((product) => {
+//       const costPrice = product.costPrice
+//         ? product.costPrice.toFixed(2)
+//         : "0.00";
+//       const sellingPrice = product.sellingPrice
+//         ? product.sellingPrice.toFixed(2)
+//         : "0.00";
+
+//       const row = document.createElement("tr");
+//       row.innerHTML = `
+//         <td>${product.productName}</td>
+//         <td>₹${costPrice}</td>
+//         <td>₹${sellingPrice}</td>
+//         <td>${product.date}</td>
+//         <td>${product.supplier}</td>
+//         <td>${product.category}</td>
+//         <td>${product.quantity}</td>
+
+//  <td class="action-icons">
+//                     <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+//                     <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+//                 </td>
+
+//       `;
+//       tableBody.appendChild(row);
+//     });
+
+//     renderPaginationControls();
+//   }
+// }
+
 // Function to render the table with pagination
 function tableRender(page = 1) {
   const tableBody = document.querySelector("#purchaseTable tbody");
-  if (tableBody) {
-    tableBody.innerHTML = "";
+  if (!tableBody) return;
+  // Add CSS for action icons
+  const style = document.createElement("style");
+  style.textContent = `
+    .action-icons i {
+      cursor: pointer;
+      margin: 0 5px;
+    }
+  `;
+  document.head.appendChild(style);
 
-    const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
+  tableBody.innerHTML = "";
 
-    const paginatedData = purchaseData.slice(start, end);
+  // Check if there's no data
+  if (!purchaseData || purchaseData.length === 0) {
+    const emptyRow = document.createElement("tr");
+    emptyRow.innerHTML = `
+      <td colspan="8" style="text-align: center; padding: 20px; font-size: 18px;">
+        <strong>No Data Found</strong>
+      </td>
+    `;
+    tableBody.appendChild(emptyRow);
 
-    paginatedData.forEach((product) => {
-      const costPrice = product.costPrice
-        ? product.costPrice.toFixed(2)
-        : "0.00";
-      const sellingPrice = product.sellingPrice
-        ? product.sellingPrice.toFixed(2)
-        : "0.00";
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${product.productName}</td>
-        <td>₹${costPrice}</td>
-        <td>₹${sellingPrice}</td>
-        <td>${product.date}</td>
-        <td>${product.supplier}</td>
-        <td>${product.category}</td>
-        <td>${product.quantity}</td>
-
- <td class="action-icons">
-                    <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
-                    <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
-                </td>
-
-        
-      `;
-      tableBody.appendChild(row);
-    });
-
-    renderPaginationControls();
+    // Hide pagination when no data
+    const paginationControls = document.getElementById("paginationControls");
+    if (paginationControls) {
+      paginationControls.style.display = "none";
+    }
+    return;
   }
-}
 
+  // Show pagination if there's data
+  const paginationControls = document.getElementById("paginationControls");
+  if (paginationControls) {
+    paginationControls.style.display = "block";
+  }
+
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+
+  const paginatedData = purchaseData.slice(start, end);
+
+  paginatedData.forEach((product) => {
+    const costPrice = product.costPrice ? product.costPrice.toFixed(2) : "0.00";
+    const sellingPrice = product.sellingPrice
+      ? product.sellingPrice.toFixed(2)
+      : "0.00";
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${product.productName}</td>
+      <td>₹${costPrice}</td>
+      <td>₹${sellingPrice}</td>
+      <td>${product.date}</td>
+      <td>${product.supplier}</td>
+      <td>${product.category}</td>
+      <td>${product.quantity}</td>
+      <td class="action-icons">
+        <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+        <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  renderPaginationControls();
+}
+updateTotals();
 function renderPaginationControls() {
   const paginationControls = document.getElementById("paginationControls");
   paginationControls.innerHTML = "";
@@ -147,6 +221,47 @@ document
 
 // Initial render
 tableRender(currentPage);
+
+// Function to calculate and update totals
+function updateTotals() {
+  const totalPurchaseValue = purchaseData.reduce((total, item) => {
+    return total + item.costPrice * item.quantity;
+  }, 0);
+
+  const totalItems = purchaseData.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
+
+  // Update the display
+  const totalElement = document.getElementById("totalValue");
+  if (totalElement) {
+    const formattedValue = isNaN(totalPurchaseValue)
+      ? "0.00"
+      : totalPurchaseValue.toFixed(2);
+    totalElement.textContent = `₹${formattedValue}`;
+  }
+  // document.getElementById(
+  //   "totalValue"
+  // ).textContent = `₹${totalPurchaseValue.toFixed(2)}`;
+  // document.getElementById("totalPurchase").textContent =
+  //   totalItems.toLocaleString() || "1";
+  const totalPurchaseElement = document.getElementById("totalPurchase");
+  if (totalPurchaseElement) {
+    // Handle null, undefined, or invalid numbers
+    const displayValue =
+      !totalItems || isNaN(totalItems) ? "0" : totalItems.toString();
+    totalPurchaseElement.textContent = displayValue;
+  }
+}
+
+// deleteProduct
+
+window.deleteProduct = function (id) {
+  purchaseData = purchaseData.filter((d) => d.id !== id);
+  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+  tableRender();
+  updateTotals();
+};
 
 // add product
 
@@ -189,9 +304,9 @@ function addingProducts() {
     } else {
       purchaseData.unshift(product);
     }
-
+    tableRender(currentPage);
     saveToLocalStorage();
-    // tableRender();
+    updateTotals();
     modal.style.display = "none";
 
     document.getElementById("addProductForm").reset();
@@ -203,30 +318,22 @@ addingProducts();
 
 console.log(currentProductId);
 console.log(purchaseData);
+// // total purchase value
+// const totalPurchaseValue = purchaseData.reduce((total, item) => {
+//   return total + item.costPrice * item.quantity;
+// }, 0);
 
-const totalPurchaseValue = purchaseData.reduce((total, item) => {
-  return total + item.costPrice * item.quantity;
-}, 0);
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.getElementById("totalValue").textContent = `₹${totalPurchaseValue}`;
+//   document.getElementById("totalPurchase").textContent =
+//     totalItems.toLocaleString();
+// });
+// console.log("Total Purchase Value:", totalPurchaseValue);
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("totalValue").textContent = `₹${totalPurchaseValue}`;
-  document.getElementById("totalPurchase").textContent =
-    totalItems.toLocaleString();
-});
-console.log("Total Purchase Value:", totalPurchaseValue);
-
-// total items
-const totalItems = purchaseData.reduce((total, item) => {
-  return total + item.quantity;
-}, 0);
-
-// deleteProduct
-
-window.deleteProduct = function (id) {
-  purchaseData = purchaseData.filter((d) => d.id !== id);
-  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
-  tableRender();
-};
+// // total items
+// const totalItems = purchaseData.reduce((total, item) => {
+//   return total + item.quantity;
+// }, 0);
 
 // Edit Product
 
@@ -241,6 +348,7 @@ window.editProduct = function (id) {
     (document.getElementById("supplier").value = product.supplier),
     (document.getElementById("category").value = product.category),
     (document.getElementById("quantity").value = product.quantity);
+  updateTotals();
   modal.style.display = "flex";
 };
 

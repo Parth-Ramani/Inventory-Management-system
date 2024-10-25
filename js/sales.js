@@ -80,16 +80,37 @@ const productSelect = document.getElementById("productSelect");
 
 openModalBtn?.addEventListener("click", () => {
   modal.style.display = "flex";
-  // formTable();
+  formTable();
 });
 
+// closeModalBtn?.addEventListener("click", () => {
+//   document.getElementById("customerName").value = "";
+//   document.getElementById("date").value = ""
+// if(selectedProducts.length<1  ){
+
+// }
+//   modal.style.display = "none";
+
+//   formTable();
+// });
 closeModalBtn?.addEventListener("click", () => {
+  const customerName = document.getElementById("customerName").value.trim();
+  const customerDate = document.getElementById("date").value.trim();
+
+  // Check if there are products AND no customer name
+  if ((selectedProducts.length > 0 && !customerName) || !customerDate) {
+    alert("Please enter customer name before closing"); // Optional: show error message
+    return; // Prevent modal from closing
+  }
+
+  // If validation passes, clear fields and close
   document.getElementById("customerName").value = "";
   document.getElementById("date").value = "";
   modal.style.display = "none";
+  formTable();
 });
 
-// // table render
+// table render
 
 function tableRender(page = 1) {
   const tableBody = document.querySelector("#salesTable tbody");
@@ -338,6 +359,11 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
     } else {
       // Adding new product
       selectedProducts.push(allItems);
+      console.log("selectedProducts", selectedProducts);
+      localStorage.setItem(
+        "selectedProducts",
+        JSON.stringify(selectedProducts)
+      );
     }
 
     // Check if the available quantity is enough
@@ -486,7 +512,7 @@ window.deleteCustomer = function (id) {
 
   tableRender();
 };
-
+// Remove item
 window.removeItem = function (id) {
   const selectedProduct = selectedProducts.find((prod) => prod.id === id);
 
@@ -521,7 +547,7 @@ window.removeItem = function (id) {
   console.log("Updated quantity:", purchaseData[index].quantity);
   console.log("Updated purchaseData:", purchaseData);
 };
-
+//////////////////
 document
   .getElementById("calculateTotalBtn")
   ?.addEventListener("click", function () {
