@@ -1,7 +1,6 @@
 if (document.referrer === "") {
-  window.location.href = "index.html";
+  window.location.href = "authentication.html";
 }
-
 export let initialPurchaseData = [
   {
     id: 1,
@@ -72,48 +71,6 @@ export let purchaseData =
 function saveToLocalStorage() {
   localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
 }
-
-// // Function to render the table with pagination
-// function tableRender(page = 1) {
-//   const tableBody = document.querySelector("#purchaseTable tbody");
-//   if (tableBody) {
-//     tableBody.innerHTML = "";
-
-//     const start = (page - 1) * itemsPerPage;
-//     const end = start + itemsPerPage;
-
-//     const paginatedData = purchaseData.slice(start, end);
-
-//     paginatedData.forEach((product) => {
-//       const costPrice = product.costPrice
-//         ? product.costPrice.toFixed(2)
-//         : "0.00";
-//       const sellingPrice = product.sellingPrice
-//         ? product.sellingPrice.toFixed(2)
-//         : "0.00";
-
-//       const row = document.createElement("tr");
-//       row.innerHTML = `
-//         <td>${product.productName}</td>
-//         <td>₹${costPrice}</td>
-//         <td>₹${sellingPrice}</td>
-//         <td>${product.date}</td>
-//         <td>${product.supplier}</td>
-//         <td>${product.category}</td>
-//         <td>${product.quantity}</td>
-
-//  <td class="action-icons">
-//                     <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
-//                     <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
-//                 </td>
-
-//       `;
-//       tableBody.appendChild(row);
-//     });
-
-//     renderPaginationControls();
-//   }
-// }
 
 // Function to render the table with pagination
 function tableRender(page = 1) {
@@ -240,11 +197,7 @@ function updateTotals() {
       : totalPurchaseValue.toFixed(2);
     totalElement.textContent = `₹${formattedValue}`;
   }
-  // document.getElementById(
-  //   "totalValue"
-  // ).textContent = `₹${totalPurchaseValue.toFixed(2)}`;
-  // document.getElementById("totalPurchase").textContent =
-  //   totalItems.toLocaleString() || "1";
+
   const totalPurchaseElement = document.getElementById("totalPurchase");
   if (totalPurchaseElement) {
     // Handle null, undefined, or invalid numbers
@@ -318,22 +271,6 @@ addingProducts();
 
 console.log(currentProductId);
 console.log(purchaseData);
-// // total purchase value
-// const totalPurchaseValue = purchaseData.reduce((total, item) => {
-//   return total + item.costPrice * item.quantity;
-// }, 0);
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   document.getElementById("totalValue").textContent = `₹${totalPurchaseValue}`;
-//   document.getElementById("totalPurchase").textContent =
-//     totalItems.toLocaleString();
-// });
-// console.log("Total Purchase Value:", totalPurchaseValue);
-
-// // total items
-// const totalItems = purchaseData.reduce((total, item) => {
-//   return total + item.quantity;
-// }, 0);
 
 // Edit Product
 

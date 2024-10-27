@@ -72,7 +72,8 @@
                 <li> <a href="index.html">Home</a></li>
                 <li> <a href="dashboard.html">Purchase Dashboard</a></li>
                 <li> <a href="sales.html" class="active">Sales Dashboard</a></li>
-                <li> <a href="analystDashboard.html" class="active">Sales Dashboard</a></li>
+                <!-- <li> <a href="analystDashboard.html" class="active">Sales Dashboard</a></li> -->
+                <li><a href="#" onclick="handleLogout()">Logout</a></li> <!-- Logout link -->
 
             </ul>
         </nav>
@@ -132,22 +133,18 @@
                     <input type="text" id="customerName" placeholder="Customer Name" required>
                     <input type="date" id="date" required>
                     <!-- <input type="text" id="productName" placeholder="Product Name" required> -->
-                    <button type="submit">Add All</button>
 
                 </form>
                 <form id="innerForm">
                     <select id="productSelect" name="productCategory">
-                        <!-- <option value="">Select a category</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="clothing">Clothing</option>
-                            <option value="books">Books</option>
-                            <option value="food">Food</option> -->
+
                     </select>
                     <input type="number" id="quantity" placeholder="Quantity" required>
                     <input type="number" id="sellingPrice" placeholder="Selling Price" required>
 
                     <button type="submit">Add Product</button>
                 </form>
+
 
 
                 <h4>All Products</h4>
@@ -165,6 +162,7 @@
 
                     </tbody>
                 </table>
+                <button class="addAllBtn" type="submit">Add All</button>
             </div>
 
 
@@ -173,6 +171,7 @@
         </div>
     </main>
     <script type="module" src="js/sales.js" defer></script>
+    <script src="js/authentication.js"></script>
 
 </body>
 

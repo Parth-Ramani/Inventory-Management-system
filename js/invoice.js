@@ -44,13 +44,7 @@ if (product) {
   document.getElementById("total").textContent = product.grandTotal;
   document.getElementById("customerName").textContent = product.customerName;
   document.getElementById("billDate").textContent = product.date;
-  // Example: Populate invoice fields
-  //   document.getElementById("invoice-title").textContent = product.customerName;
-  //   document.getElementById("invoiceDate").textContent = product.date;
-  //   document.getElementById("grandTotal").textContent = product.grandTotal;
-  // Add more fields as needed
 
-  // Clear the temporary storage
   localStorage.removeItem("invoiceData");
 }
 
