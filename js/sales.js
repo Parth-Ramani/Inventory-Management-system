@@ -223,7 +223,10 @@ document
 tableRender(currentPage);
 
 console.log(purchaseData);
-
+function safeParseNumber(value) {
+  const parsedValue = Number(value);
+  return isNaN(parsedValue) ? 0 : parsedValue;
+}
 // dropDown the all products
 function populateDropdown(purchaseData) {
   const defaultOption = document.createElement("option");
@@ -279,8 +282,7 @@ document.getElementById("innerForm")?.addEventListener("submit", (e) => {
       sellingPrice: selectedPrice,
       quantity: document.getElementById("quantity").value,
       id: currentItemId || selectedProduct.id,
-      total: selectedPrice * document.getElementById("quantity").value,
-      originalProductId: selectedProduct.id // Store original product ID for later
+      total: selectedPrice * document.getElementById("quantity").value
     };
 
     if (!currentItemId) {
@@ -322,13 +324,6 @@ const addAllBtn = document.querySelector(".addAllBtn");
 
 addAllBtn.addEventListener("click", () => {
   // Check if both products and form fields are filled
-  const customerName = document.getElementById("customerName").value.trim();
-  const date = document.getElementById("date").value;
-
-  if (!customerName || !date) {
-    customerForm.reportValidity();
-    return;
-  }
 
   // if (selectedProducts.length === 0) {
   //   alert("Please select at least one product");
@@ -348,42 +343,6 @@ function handleFormSubmission() {
     return;
   }
 
-  if (currentCustomerId) {
-    const originalCustomer = customerData.find(
-      (c) => c.id === currentCustomerId
-    );
-    if (originalCustomer) {
-      originalCustomer.products.forEach((originalProduct) => {
-        const stillExists = selectedProducts.find(
-          (p) => p.id === originalProduct.id
-        );
-        if (!stillExists) {
-          const purchaseProduct = purchaseData.find(
-            (p) => p.id === originalProduct.originalProductId
-          );
-          if (purchaseProduct) {
-            purchaseProduct.quantity += parseInt(originalProduct.quantity);
-          }
-        }
-      });
-    }
-  }
-
-  for (let selectedProduct of selectedProducts) {
-    const purchaseProduct = purchaseData.find(
-      (p) => p.id === selectedProduct.originalProductId
-    );
-
-    if (purchaseProduct) {
-      if (purchaseProduct.quantity >= selectedProduct.quantity) {
-        purchaseProduct.quantity -= parseInt(selectedProduct.quantity);
-      } else {
-        alert(`Not enough stock for ${selectedProduct.product}`);
-        return;
-      }
-    }
-  }
-
   // Calculate total price
   const totalPrice = selectedProducts.reduce((total, product) => {
     return total + product.total;
@@ -399,13 +358,41 @@ function handleFormSubmission() {
 
   if (currentCustomerId) {
     const index = customerData.findIndex((i) => i.id === currentCustomerId);
+    let previousData = { ...customerData[index] };
+    let previousProducts = [...previousData.products];
+    purchaseData = purchaseData.map((product) => {
+      let listProduct = previousProducts.find(
+        (previousProduct) => previousProduct.id === product.id
+      );
+      if (listProduct) {
+        product.quantity =
+          safeParseNumber(product.quantity) +
+          safeParseNumber(listProduct.quantity);
+        console.log(listProduct, "listproduct");
+      }
+      return product;
+    });
     customerData[index] = newCustomer;
   } else {
     customerData.unshift(newCustomer);
   }
+  console.log(selectedProducts, "selectedProducts");
+  console.log(newCustomer, "submitHandler");
+
+  let tempPurchaseProduct = purchaseData.map((product) => {
+    let listProduct = selectedProducts.find(
+      (selectedProduct) => selectedProduct.id === product.id
+    );
+    if (listProduct) {
+      product.quantity =
+        safeParseNumber(product.quantity) -
+        safeParseNumber(listProduct.quantity);
+    }
+    return product;
+  });
 
   // Save all changes
-  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+  localStorage.setItem("purchaseData", JSON.stringify(tempPurchaseProduct));
   localStorage.setItem("customerData", JSON.stringify(customerData));
 
   // Reset form and state
@@ -421,18 +408,6 @@ function handleFormSubmission() {
 window.editProduct = function (id) {
   currentCustomerId = id;
   const customer = customerData.find((customer) => customer.id === id);
-
-  customer.products.forEach((product) => {
-    const purchaseItem = purchaseData.find(
-      (p) => p.id === product.originalProductId
-    );
-    if (purchaseItem) {
-      purchaseItem.quantity += parseInt(product.quantity);
-    }
-  });
-
-  // Update localStorage with restored quantities
-  localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
 
   // Now set up the form for editing
   document.getElementById("customerName").value = customer.customerName;
@@ -466,7 +441,7 @@ function formTable() {
   });
 }
 
-// formTable();
+formTable();
 console.log(purchaseData);
 
 ///Edit Products in Table
@@ -488,27 +463,16 @@ window.deleteCustomer = function (id) {
   tableRender();
 };
 
-// Modify removeItem function to handle quantity restoration
 window.removeItem = function (id) {
   console.log(id);
-  const selectedProduct = selectedProducts.find((prod) => prod.id === id);
-  console.log(selectedProduct);
-  // if (selectedProduct) {
-  //   // Find the original product in purchaseData using originalProductId
-  //   const purchaseProduct = purchaseData.find(
-  //     (product) => product.id === selectedProduct.originalProductId
-  //   );
-  // if (purchaseProduct) {
-  //   // Restore the quantity
-  //   purchaseProduct.quantity += parseInt(selectedProduct.quantity);
-  //   console.log(purchaseProduct.quantity, "purchaseProduct.quantity");
-  //   localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
-  // }
-  // Remove from selectedProducts
-  //   selectedProducts = selectedProducts.filter((prod) => prod.id !== id);
-  //   formTable();
-  // }
+
+  // Remove the selected product from selectedProducts
+  selectedProducts = selectedProducts.filter((prod) => prod.id !== id);
+  console.log("Updated selected products:", selectedProducts);
+
+  formTable();
 };
+
 //////////////////
 document
   .getElementById("calculateTotalBtn")
