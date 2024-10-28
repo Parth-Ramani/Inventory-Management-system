@@ -323,13 +323,6 @@ const customerForm = document.getElementById("CustomerAddForm");
 const addAllBtn = document.querySelector(".addAllBtn");
 
 addAllBtn.addEventListener("click", () => {
-  // Check if both products and form fields are filled
-
-  // if (selectedProducts.length === 0) {
-  //   alert("Please select at least one product");
-  //   return;
-  // }
-
   handleFormSubmission();
 });
 
