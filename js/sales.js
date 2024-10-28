@@ -1,5 +1,5 @@
 if (document.referrer === "") {
-  window.location.href = "authentication.html";
+  window.location.href = "registration.html";
 }
 import { purchaseData as purchaseDataAll } from "./script.js";
 console.log(purchaseDataAll);

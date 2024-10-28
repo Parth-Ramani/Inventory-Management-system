@@ -1,5 +1,5 @@
 if (document.referrer === "") {
-  window.location.href = "authentication.html";
+  window.location.href = "registration.html";
 }
 export let initialPurchaseData = [
   {

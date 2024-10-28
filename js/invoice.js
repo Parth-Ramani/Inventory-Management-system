@@ -1,5 +1,5 @@
 if (document.referrer === "") {
-  window.location.href = "index.html";
+  window.location.href = "registration.html";
 }
 
 // / Try getting data from localStorage first
