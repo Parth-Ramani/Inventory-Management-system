@@ -66,7 +66,7 @@ window.addEventListener("click", (e) => {
 
 // stored data inLocal storage
 export let purchaseData =
-  JSON.parse(localStorage.getItem("purchaseData")) || initialPurchaseData;
+  JSON.parse(localStorage.getItem("purchaseData")) || [];
 
 function saveToLocalStorage() {
   localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
@@ -124,19 +124,33 @@ function tableRender(page = 1) {
       : "0.00";
 
     const row = document.createElement("tr");
+    // row.innerHTML = `
+    //   <td>${product.productName}</td>
+    //   <td>₹${costPrice}</td>
+    //   <td>₹${sellingPrice}</td>
+    //   <td>${product.date}</td>
+    //   <td>${product.supplier}</td>
+    //   <td>${product.category}</td>
+    //   <td>${product.quantity}</td>
+    //   <td class="action-icons">
+    //     <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+    //     <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+    //   </td>
+    // `;
+    // Modify the row rendering to include unit
     row.innerHTML = `
-      <td>${product.productName}</td>
-      <td>₹${costPrice}</td>
-      <td>₹${sellingPrice}</td>
-      <td>${product.date}</td>
-      <td>${product.supplier}</td>
-      <td>${product.category}</td>
-      <td>${product.quantity}</td>
-      <td class="action-icons">
-        <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
-        <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
-      </td>
-    `;
+<td>${product.productName}</td>
+<td>₹${costPrice}</td>
+<td>₹${sellingPrice}</td>
+<td>${product.date}</td>
+<td>${product.supplier}</td>
+<td>${product.category}</td>
+<td>${product.quantity} ${product.unit}</td> <!-- Include unit here -->
+<td class="action-icons">
+  <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
+  <i class="fas fa-trash-alt" onclick="deleteProduct(${product.id})"></i>
+</td>
+`;
     tableBody.appendChild(row);
   });
 
@@ -216,25 +230,98 @@ window.deleteProduct = function (id) {
   updateTotals();
 };
 
-// add product
+// Function to set units based on category
+function setUnitBasedOnCategory(category) {
+  const unitSelect = document.getElementById("unit");
 
+  // Reset unit options
+  unitSelect.innerHTML = "";
+
+  // Define unit options based on category
+  let units;
+  if (category === "grocery" || "dairy") {
+    units = ["kg", "liter", "piece"];
+  } else if (category === "clothing") {
+    units = ["piece"];
+  } else if (category === "electronics") {
+    units = ["piece"];
+  } else {
+    units = ["unit"];
+  }
+
+  // Populate unit options
+  units.forEach((unit) => {
+    const option = document.createElement("option");
+    option.value = unit;
+    option.textContent = unit;
+    unitSelect.appendChild(option);
+  });
+}
+
+// Call `setUnitBasedOnCategory` whenever the category field changes
+document.getElementById("category")?.addEventListener("change", function () {
+  setUnitBasedOnCategory(this.value);
+});
+
+// // add product
+
+// function addingProducts() {
+//   document.getElementById("addProductForm")?.addEventListener("submit", (e) => {
+//     e.preventDefault();
+
+//     const productName = document.getElementById("productName")?.value;
+
+//     // Check for duplicate product name only when adding new product (not editing)
+//     if (!currentProductId) {
+//       const productExists = purchaseData.some(
+//         (item) => item.productName.toLowerCase() === productName.toLowerCase()
+//       );
+
+//       if (productExists) {
+//         alert("This product already exists in inventory!");
+//         return;
+//       }
+//     }
+
+//     const product = {
+//       id: currentProductId || Date.now(),
+//       productName: productName,
+//       costPrice: Number(document.getElementById("costPrice")?.value),
+//       sellingPrice: Number(document.getElementById("sellingPrice")?.value),
+//       date: document.getElementById("date")?.value,
+//       supplier: document.getElementById("supplier")?.value,
+//       category: document.getElementById("category")?.value,
+//       quantity: Number(document.getElementById("quantity")?.value)
+//     };
+//     console.log(currentProductId, "currentProductId");
+//     if (currentProductId) {
+//       // Editing existing product
+//       const index = purchaseData.findIndex((i) => i.id === currentProductId);
+//       console.log(index, "index");
+//       if (index !== -1) {
+//         purchaseData[index] = product;
+//       }
+//     } else {
+//       purchaseData.unshift(product);
+//     }
+//     tableRender(currentPage);
+//     saveToLocalStorage();
+//     updateTotals();
+//     modal.style.display = "none";
+
+//     document.getElementById("addProductForm").reset();
+//     currentProductId = null;
+//   });
+// }
+
+// addingProducts();
+// Update the `addingProducts` function to include unit
 function addingProducts() {
   document.getElementById("addProductForm")?.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const productName = document.getElementById("productName")?.value;
-
-    // Check for duplicate product name only when adding new product (not editing)
-    if (!currentProductId) {
-      const productExists = purchaseData.some(
-        (item) => item.productName.toLowerCase() === productName.toLowerCase()
-      );
-
-      if (productExists) {
-        alert("This product already exists in inventory!");
-        return;
-      }
-    }
+    const unit = document.getElementById("unit").value; // Add unit selection
 
     const product = {
       id: currentProductId || Date.now(),
@@ -244,13 +331,14 @@ function addingProducts() {
       date: document.getElementById("date")?.value,
       supplier: document.getElementById("supplier")?.value,
       category: document.getElementById("category")?.value,
-      quantity: Number(document.getElementById("quantity")?.value)
+      quantity: Number(document.getElementById("quantity")?.value),
+      unit: unit // Include unit in product data
     };
-    console.log(currentProductId, "currentProductId");
+
+    // Remaining code as in the original `addingProducts` function
     if (currentProductId) {
       // Editing existing product
       const index = purchaseData.findIndex((i) => i.id === currentProductId);
-      console.log(index, "index");
       if (index !== -1) {
         purchaseData[index] = product;
       }
