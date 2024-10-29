@@ -28,7 +28,7 @@ if (product) {
       const row = document.createElement("tr");
       row.innerHTML = `
           <td>${pro.product}</td>
-  <td>${pro.quantity}</td>
+  <td>${pro.quantity} ${pro.unit}</td>
   <td>${pro.sellingPrice}</td>
   <td>${pro.total}</td>
   

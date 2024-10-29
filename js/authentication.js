@@ -1,6 +1,6 @@
-if (document.referrer === "") {
-  window.location.href = "authentication.html";
-}
+// if (document.referrer === "") {
+//   window.location.href = "authentication.html";
+// }
 document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("isRegistered")) {
     showLogin();

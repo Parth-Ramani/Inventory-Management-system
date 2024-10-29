@@ -267,3 +267,130 @@ h1 {
     color: black
 }
 
+/* dashboard */
+
+.dashboard {
+    /* max-width: 1100px; */
+    background-color: "black";
+    margin: 0 auto;
+}
+
+.main-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card.sales {
+    background-color: #EBF5FF;
+}
+
+.metric-card.purchases {
+    background-color: #FEE2E2;
+}
+
+.metric-card.profit {
+    background-color: #DCFCE7;
+}
+
+.metric-card.loss {
+    background-color: #FEE2E2;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.metric-title {
+    font-size: 0.875rem;
+    color: #4B5563;
+    font-weight: 500;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.metric-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.2rem;
+}
+
+.sales .metric-icon {
+    background-color: #DBEAFE;
+    color: #2563EB;
+}
+
+.purchases .metric-icon {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+.profit .metric-icon {
+    background-color: #DCFCE7;
+    color: #16A34A;
+}
+
+.detailed-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.detail-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detail-card h3 {
+    color: #1F2937;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.metric-label {
+    color: #6B7280;
+}
+
+.metric-number {
+    font-weight: 600;
+    color: #1F2937;
+}
+
+@media (max-width: 768px) {
+    .main-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .detailed-metrics {
+        grid-template-columns: 1fr;
+    }
+}

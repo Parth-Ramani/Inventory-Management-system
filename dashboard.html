@@ -136,6 +136,7 @@
                 </div>
                 <div class="modal-body"></div>
                 <form id="addProductForm" method="POST">
+
                     <input type="hidden" id="productId">
                     <input type="text" id="productName" placeholder="Product Name" required>
                     <input type="number" id="costPrice" placeholder="Cost Price" step="0.01" required>
@@ -143,7 +144,12 @@
                     <input type="date" id="date" required>
                     <input type="text" id="supplier" placeholder="Supplier" required>
                     <input type="text" id="category" placeholder="Category" required>
-                    <input type="number" id="quantity" placeholder="quantity" required>
+                    <input type="number" id="quantity" placeholder="Quantity" required>
+                    <select id="unit" required>
+                        <option value="kg">kg</option>
+                        <option value="liter">liter</option>
+                        <!-- You can add more units here -->
+                    </select>
                     <button type="submit">Add Product</button>
                 </form>
             </div>

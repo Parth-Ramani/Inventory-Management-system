@@ -139,9 +139,10 @@
                     <select id="productSelect" name="productCategory">
 
                     </select>
-                    <input type="number" id="quantity" placeholder="Quantity" required>
-                    <input type="number" id="sellingPrice" placeholder="Selling Price" required>
 
+                    <input type="number" id="sellingPrice" placeholder="Selling Price" step="0.01" required>
+                    <input type="number" id="quantity" placeholder="Quantity" step="0.01" required>
+                    <input type="text" id="unit" placeholder="units" step="0.01" required readonly>
                     <button type="submit">Add Product</button>
                 </form>
 
