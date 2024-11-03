@@ -1,21 +1,3 @@
-// // auth.js - Common authentication utilities
-// function isLoggedIn() {
-//   return localStorage.getItem("isLoggedIn") === "true";
-// }
-
-// function checkAuthAndRedirect() {
-//   if (isLoggedIn()) {
-//     // If user is logged in, redirect to index.html
-//     window.location.href = "index.html";
-//   } else if (!localStorage.getItem("userEmail")) {
-//     // If no user is registered, redirect to registration
-//     window.location.href = "registration.html";
-//   } else {
-//     // If user exists but not logged in, redirect to login
-//     window.location.href = "login.html";
-//   }
-// }
-
 // auth.js - Common authentication utilities
 function isLoggedIn() {
   return localStorage.getItem("isLoggedIn") === "true";

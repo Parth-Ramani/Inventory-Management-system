@@ -394,3 +394,9 @@ h1 {
         grid-template-columns: 1fr;
     }
 }
+
+#salesPieChart {
+    max-width: 200px; /* Set max width for the chart */
+    height: 200px; /* Set height for the chart */
+    margin: 20px auto; /* Center the chart */
+  }
